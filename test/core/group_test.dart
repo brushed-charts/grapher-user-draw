@@ -13,10 +13,12 @@ class GroupRulesTester extends GroupRules {
 void main() {
   testExpectedPoint();
   testChangementNeededFunction();
+  testAddingAnchorToGroup();
+  testEditAnAnchor();
 }
 
 void testExpectedPoint() {
-  group('test AnchorGroup expected points with', () {
+  group('Test AnchorGroup expected points with: ', () {
     test("too few points", () {
       expect(() => GroupRulesTester(1), throwsException);
     });
@@ -27,7 +29,7 @@ void testExpectedPoint() {
 }
 
 void testChangementNeededFunction() {
-  group('test AnchorGroup changement needed when', () {
+  group('Test AnchorGroup changement needed when: ', () {
     test("group is full", () {
       final groupFull = generateGroup(expectedPoint: 7, presentPoint: 7);
       expect(groupFull.shouldChange(), equals(true));
@@ -37,6 +39,30 @@ void testChangementNeededFunction() {
       final groupPartial = generateGroup(expectedPoint: 7, presentPoint: 3);
       expect(groupPartial.shouldChange(), equals(false));
     });
+  });
+}
+
+void testAddingAnchorToGroup() {
+  group('Test adding a point to the group when: ', () {
+    test('group is not full', () {
+      final group = generateGroup(expectedPoint: 3, presentPoint: 2);
+      expect(group.length, equals(2));
+      group.add(generateAnchor());
+      expect(group.length, equals(3));
+    });
+    test('group is full', () {
+      final group = generateGroup(expectedPoint: 3, presentPoint: 3);
+      expect(() => group.add(generateAnchor()), throwsException);
+    });
+  });
+}
+
+void testEditAnAnchor() {
+  test('Test AnchorGroup when an internal anchor is updated', () {
+    final group = generateGroup(expectedPoint: 9, presentPoint: 3);
+    expect(() {
+      group.anchorList[1] = generateAnchor();
+    }, returnsNormally);
   });
 }
 
