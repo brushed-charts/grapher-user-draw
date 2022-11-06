@@ -1,20 +1,18 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher_user_draw/core/anchor.dart';
 import 'package:grapher_user_draw/core/anchor_2d.dart';
-import 'package:grapher_user_draw/core/group_rules.dart';
+import 'package:grapher_user_draw/core/anchor_group.dart';
+import 'package:grapher_user_draw/logic/user_interaction.dart';
+import 'package:grapher_user_draw/logic/virtual_coord.dart';
 
-class GroupRulesTester extends GroupRules {
-  final id = Random().nextInt(100);
-  GroupRulesTester(int expectedPoints) : super(expectedPoints);
-}
+import '../misc/generator.dart';
 
 void main() {
   testExpectedPoint();
   testChangementNeededFunction();
   testAddingAnchorToGroup();
   testEditAnAnchor();
+  testHitObject();
 }
 
 void testExpectedPoint() {
@@ -66,19 +64,32 @@ void testEditAnAnchor() {
   });
 }
 
-GroupRules generateGroup(
-    {required int expectedPoint, required int presentPoint}) {
-  final group = GroupRulesTester(expectedPoint);
-  for (var i = 0; i < presentPoint; i++) {
-    final anchor = generateAnchor();
-    group.add(anchor);
-  }
-  return group;
+void testHitObject() {
+  group('Test returned hit object by AnchorGroup when:', () {
+    final grp = generateGroup(
+        expectedPoint: 7,
+        presentPoint: 5,
+        xBase: DateTime(2022, 11, 06, 15),
+        interval: const Duration(minutes: 2));
+    test('coord is pointing to an anchor', () {
+      final tapX = DateTime(2022, 11, 06, 15, 04);
+      const double tapY = 999;
+      final tapCoord = VirtualCoord(x: tapX, y: tapY);
+      grp.anchorList[2] = updateAnchorWithY(grp.anchorList[2], tapY);
+      final hitAnchor = grp.getHitObject(tapCoord) as Anchor2D?;
+      expect(hitAnchor, isNotNull);
+      expect(hitAnchor?.x, equals(tapX));
+      expect(hitAnchor?.y, equals(tapY));
+      expect(hitAnchor?.groupID, equals(1234));
+    });
+    test('coord is pointing to nothing', () {
+      final tapX = DateTime(2022, 11, 06, 18, 04);
+      final tapCoord = VirtualCoord(x: tapX, y: 145);
+      expect(grp.getHitObject(tapCoord)?.x, isNull);
+    });
+  });
 }
 
-Anchor generateAnchor() {
-  const groupID = 1234;
-  final y = Random.secure().nextDouble();
-  final anchor = Anchor2D(groupID, DateTime.now(), y);
-  return anchor;
+Anchor2D updateAnchorWithY(Anchor original, double y) {
+  return Anchor2D(original.groupID, original.x, y);
 }
