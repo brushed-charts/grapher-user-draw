@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher_user_draw/core/anchor.dart';
 import 'package:grapher_user_draw/core/anchor_2d.dart';
 import 'package:grapher_user_draw/core/anchor_group.dart';
-import 'package:grapher_user_draw/logic/user_interaction.dart';
+import 'package:grapher_user_draw/logic/edition_interaction.dart';
 import 'package:grapher_user_draw/logic/virtual_coord.dart';
 
 import '../misc/generator.dart';

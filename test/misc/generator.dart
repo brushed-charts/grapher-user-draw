@@ -1,15 +1,20 @@
 import 'dart:math';
 
-import 'package:grapher_user_draw/core/anchor.dart';
 import 'package:grapher_user_draw/core/anchor_2d.dart';
 import 'package:grapher_user_draw/core/anchor_group.dart';
 import 'package:grapher_user_draw/logic/figure.dart';
-import 'package:grapher_user_draw/logic/path.dart';
 
 class GroupRulesTester extends AnchorGroup {
   @override
   final id = Random().nextInt(100);
   GroupRulesTester(int expectedPoints) : super(expectedPoints);
+}
+
+class FigureTesterWithoutDraw extends Figure<Anchor2D> {
+  FigureTesterWithoutDraw(super.expectedLength);
+
+  @override
+  draw() => throw UnimplementedError();
 }
 
 AnchorGroup generateGroup(
@@ -35,21 +40,9 @@ Anchor2D generateAnchor([DateTime? datetime]) {
   return anchor;
 }
 
-Path generatePath(int expectedPoints, int presentPoints,
-    {String type = 'aTesterType', DateTime? xBase, Duration? interval}) {
-  final path = Path(type, expectedPoints);
-  final grp = generateGroup(
-      expectedPoint: expectedPoints,
-      presentPoint: presentPoints,
-      xBase: xBase,
-      interval: interval);
-  path.anchorList.addAll(grp.anchorList.cast<Anchor2D>());
-  return path;
-}
-
 Figure generateFigure(int expectedPoints, int presentPoints,
     {DateTime? xBase, Duration? interval}) {
-  final fig = Figure(expectedPoints);
+  final fig = FigureTesterWithoutDraw(expectedPoints);
   final grp = generateGroup(
       expectedPoint: expectedPoints,
       presentPoint: presentPoints,
