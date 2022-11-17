@@ -1,37 +1,106 @@
+import 'dart:ui';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
+import 'package:grapher_user_draw/user_interaction.dart';
+import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockTapDownDetails extends Mock implements TapDownDetails {}
+class MockUserInteraction extends Mock implements UserInteraction {}
 
-class MockDragDetails extends Mock implements DragUpdateDetails {}
-
-class MockDragEndDetails extends Mock implements DragEndDetails {}
+class MockCoordTranslator extends Mock implements CoordTranslater {}
 
 void main() {
-  testControllerForTapDownEvent();
-  testControllerForDragEvent();
+  TestGestureController().testInterpretationOfTap();
+  TestGestureController().testDragInterpreter();
+  TestGestureController().testThereIsNoCallWhenVCoordIsNull();
 }
 
-void testControllerForTapDownEvent() {
-  test("test if CapturePointerEvent succeed to capture tapDown event", () {
-    const simulatedTapPosition = Offset(30, 100);
-    final controller = GestureController();
-    final tapDownDetails = MockTapDownDetails();
-    when(() => tapDownDetails.localPosition).thenReturn(simulatedTapPosition);
-    controller.onTapDown(tapDownDetails);
-    expect(controller.pointerCoord, equals(simulatedTapPosition));
-  });
-}
+class TestGestureController {
+  late final GestureController _controller;
+  late final UserInteraction _userInteraction;
+  late final CoordTranslater _coordTranslator;
+  final outputVCoord = VirtualCoord(DateTime(2022, 11, 17, 15), 1495);
 
-void testControllerForDragEvent() {
-  test("test if CapturePointerEvent succeed to capture Drag event", () {
-    const dragPosition = Offset(38, 12);
-    final controller = GestureController();
-    final dragDetails = MockDragDetails();
-    when(() => dragDetails.localPosition).thenReturn(dragPosition);
-    controller.onDrag(dragDetails);
-    expect(controller.pointerCoord, equals(dragPosition));
-  });
+  TestGestureController() {
+    registerFallBacks();
+    initMocks();
+    _controller = GestureController(
+      interactor: _userInteraction,
+      translator: _coordTranslator,
+    );
+    mockTranslationToVirtual() => _coordTranslator.toVirtual(any());
+    when(() => mockTranslationToVirtual()).thenReturn(outputVCoord);
+  }
+
+  void registerFallBacks() {
+    registerFallbackValue(VirtualCoord.zero());
+    registerFallbackValue(Offset.zero);
+  }
+
+  void initMocks() {
+    _coordTranslator = MockCoordTranslator();
+    _userInteraction = MockUserInteraction();
+  }
+
+  void testInterpretationOfTap() {
+    test('Assert cycle tap down/up without drag is interpreted as Tap', () {
+      simulateTapCycle();
+      verify(() => _userInteraction.onTap(any())).called(1);
+    });
+
+    test('Assert Tap() is called with the right VirtualCoord', () {
+      simulateTapCycle();
+      void expressionToTest() => _userInteraction.onTap(captureAny());
+      final parameterList = verify(() => expressionToTest()).captured;
+      final param = parameterList[0];
+      expect(param, equals(outputVCoord));
+    });
+  }
+
+  void testThereIsNoCallWhenVCoordIsNull() {
+    group('When translation from pixel to virtual is null', () {
+      test('assert Tap is not called', () {
+        when(() => _coordTranslator.toVirtual(any())).thenReturn(null);
+        simulateTapCycle();
+        verifyNever(() => _userInteraction.onTap(any()));
+      });
+
+      test('assert Drag is not called', () {
+        when(() => _coordTranslator.toVirtual(any())).thenReturn(null);
+        simulateDrag();
+        verifyNever(() => _userInteraction.onDrag(any()));
+      });
+    });
+  }
+
+  void testDragInterpreter() {
+    group('When a drag occure during a tap down/up cycle', () {
+      const dragCount = 20;
+      simulateDrag(dragCount);
+
+      test('assert that Tap() is not called', () {
+        verifyNever(() => _userInteraction.onTap(any()));
+      });
+
+      test('assert that Drag() is called multiple times', () {
+        verify(() => _userInteraction.onDrag(any())).called(dragCount);
+      });
+    });
+  }
+
+  void simulateTapCycle() {
+    _controller.onTapDown(TapDownDetails());
+    _controller.onTapUp(TapUpDetails(kind: PointerDeviceKind.unknown));
+  }
+
+  void simulateDrag([int dragCount = 10]) {
+    _controller.onTapDown(TapDownDetails());
+    for (double i = 0; i < dragCount; i++) {
+      _controller.onDrag(DragUpdateDetails(globalPosition: Offset(i, i)));
+    }
+    _controller.onTapUp(TapUpDetails(kind: PointerDeviceKind.unknown));
+  }
 }

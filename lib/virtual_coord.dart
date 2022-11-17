@@ -10,6 +10,11 @@ class VirtualCoord {
       other.x == x &&
       other.y == y;
 
+  static VirtualCoord zero() {
+    final epochDatetime = DateTime.fromMillisecondsSinceEpoch(0);
+    return VirtualCoord(epochDatetime, 0);
+  }
+
   @override
   int get hashCode => Object.hash(x, y);
 

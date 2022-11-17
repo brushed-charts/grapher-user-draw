@@ -1,15 +1,36 @@
 import 'package:flutter/widgets.dart';
+import 'package:grapher_user_draw/coord_translater.dart';
+import 'package:grapher_user_draw/user_interaction.dart';
+import 'package:grapher_user_draw/virtual_coord.dart';
 
 class GestureController {
-  Offset? pointerCoord;
+  final UserInteraction _interactor;
+  final CoordTranslater? _translator;
 
-  @override
+  GestureController({CoordTranslater? translator, UserInteraction? interactor})
+      : _translator = translator,
+        _interactor = interactor ?? UserInteraction();
+  bool _hasMoved = false;
+
   void onTapDown(TapDownDetails event) {
-    pointerCoord = event.localPosition;
+    _hasMoved = false;
   }
 
-  @override
+  void onTapUp(TapUpDetails event) {
+    if (_hasMoved) return;
+    final vCoord = _convertToVirtual(event.localPosition);
+    if (vCoord == null) return;
+    _interactor.onTap(vCoord);
+  }
+
   void onDrag(DragUpdateDetails event) {
-    pointerCoord = event.localPosition;
+    _hasMoved = true;
+    final vCoord = _convertToVirtual(event.localPosition);
+    if (vCoord == null) return;
+    _interactor.onDrag(vCoord);
+  }
+
+  VirtualCoord? _convertToVirtual(Offset position) {
+    return _translator?.toVirtual(position);
   }
 }

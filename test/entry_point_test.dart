@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/kernel.dart';
@@ -14,6 +16,8 @@ class FakePointerPropagator extends GraphObject with SinglePropagator {
     this.child = child;
   }
   void propagateTapDown() => propagate(TapDownDetails());
+  void propagateTapUp() =>
+      propagate(TapUpDetails(kind: PointerDeviceKind.unknown));
   void propagateDragUpdate() =>
       propagate(DragUpdateDetails(globalPosition: Offset.zero));
 }
@@ -39,6 +43,12 @@ void testGestureTransmitionToInterpreter() {
       registerFallbackValue(DragUpdateDetails(globalPosition: Offset.zero));
       fakePropagator.propagateDragUpdate();
       verify(() => mockcontroller.onDrag(captureAny())).called(1);
+    });
+
+    test('when gesture is TapUp', () {
+      registerFallbackValue(TapUpDetails(kind: PointerDeviceKind.unknown));
+      fakePropagator.propagateTapUp();
+      verify(() => mockcontroller.onTapUp(captureAny())).called(1);
     });
   });
 }
