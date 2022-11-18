@@ -5,10 +5,7 @@ class VirtualCoord {
   const VirtualCoord(this.x, this.y);
   @override
   bool operator ==(Object other) =>
-      other is VirtualCoord &&
-      other.runtimeType == runtimeType &&
-      other.x == x &&
-      other.y == y;
+      other is VirtualCoord && other.x == x && other.y == y;
 
   static VirtualCoord zero() {
     final epochDatetime = DateTime.fromMillisecondsSinceEpoch(0);
