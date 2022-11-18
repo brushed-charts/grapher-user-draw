@@ -5,7 +5,7 @@ import 'package:grapher_user_draw/virtual_coord.dart';
 
 class GestureController {
   final UserInteraction _interactor;
-  final CoordTranslater? _translator;
+  CoordTranslater? _translator;
 
   GestureController({CoordTranslater? translator, UserInteraction? interactor})
       : _translator = translator,
@@ -33,4 +33,6 @@ class GestureController {
   VirtualCoord? _convertToVirtual(Offset position) {
     return _translator?.toVirtual(position);
   }
+
+  updateTranslator(CoordTranslater translater) => _translator = translater;
 }

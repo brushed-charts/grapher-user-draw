@@ -16,8 +16,10 @@ class FakePointerPropagator extends GraphObject with SinglePropagator {
     this.child = child;
   }
   void propagateTapDown() => propagate(TapDownDetails());
+
   void propagateTapUp() =>
       propagate(TapUpDetails(kind: PointerDeviceKind.unknown));
+
   void propagateDragUpdate() =>
       propagate(DragUpdateDetails(globalPosition: Offset.zero));
 }
