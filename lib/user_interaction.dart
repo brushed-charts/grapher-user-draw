@@ -10,7 +10,7 @@ class UserInteraction {
   void onTap(VirtualCoord coord) {
     shouldCreateAnchor = true;
     lastCoord = coord;
-    lastAnchor = Anchor();
+    lastAnchor = Anchor(x: coord.x, y: coord.y);
   }
 
   void onDrag(VirtualCoord coord) {}
