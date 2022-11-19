@@ -37,13 +37,13 @@ void testFigureGroupIDGeneration() {
 }
 
 void testFigureIsFull() {
-  group('Test figure full function', () {
-    test('when anchor count reach the limit', () {
+  group('Assert figure full function return', () {
+    test('true when anchor count reach the limit', () {
       final figure = Figure(4);
       addAnchorsToFigure(4, figure);
       expect(figure.isFull(), isTrue);
     });
-    test('when anchor still have room', () {
+    test('false when figure still have room', () {
       final figure = Figure(4);
       addAnchorsToFigure(3, figure);
       expect(figure.isFull(), isFalse);
