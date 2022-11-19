@@ -9,7 +9,7 @@ class GestureController {
 
   GestureController({CoordTranslater? translator, UserInteraction? interactor})
       : _translator = translator,
-        _interactor = interactor ?? UserInteraction();
+        _interactor = interactor ?? UserInteraction(2);
   bool _hasMoved = false;
 
   void onTapDown(TapDownDetails event) {
