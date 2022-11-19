@@ -4,11 +4,15 @@ import 'misc.dart';
 class Figure {
   final groupID = Misc.generateUniqueID();
   final _anchors = <Anchor>[];
-  final int? maxLength;
+  final int maxLength;
   int get length => _anchors.length;
   bool contains(Anchor anchor) => _anchors.contains(anchor);
 
-  Figure(this.maxLength);
+  Figure(this.maxLength) {
+    if (maxLength <= 0) {
+      throw ArgumentError("Figure can't have a max length less that 1");
+    }
+  }
 
   void add(Anchor anchor) {
     if (_anchors.length == maxLength) {

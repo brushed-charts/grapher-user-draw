@@ -10,6 +10,15 @@ void main() {
   testFigureGroupIDGeneration();
   testFigureIsFull();
   testIfFigureContainAnAnchor();
+  testFigureCantHaveLessThanOneAnchor();
+}
+
+void testFigureCantHaveLessThanOneAnchor() {
+  test("Assert Figure can't have a less than one anchor", () {
+    expect(() => Figure(0), throwsArgumentError);
+    expect(() => Figure(-1), throwsArgumentError);
+    expect(() => Figure(1), returnsNormally);
+  });
 }
 
 void testPathCreation() {
