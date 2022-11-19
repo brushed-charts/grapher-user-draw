@@ -1,16 +1,50 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher_user_draw/anchor.dart';
+import 'package:grapher_user_draw/figure.dart';
+import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockFigureStore extends Mock implements FigureStore {}
 
 void main() {
-  test('Test figure creation on user Tap', () {
-    final tapDatetime = DateTime(2022, 11, 19);
-    const double tapY = 867;
-    final tapPos = VirtualCoord(tapDatetime, tapY);
-    final expectedAnchor = Anchor(x: tapDatetime, y: tapY);
-    final userInteraction = UserInteraction();
-    userInteraction.onTap(tapPos);
-    expect(userInteraction.lastAnchor, equals(expectedAnchor));
+  registerFallbackValue(Figure(1));
+  final tapPosA = VirtualCoord(DateTime(2022, 11, 19), 1052);
+  final tapPosB = VirtualCoord(DateTime(2022, 11, 18), 2052);
+  final anchorA = Anchor(x: tapPosA.x, y: tapPosA.y);
+  final anchorB = Anchor(x: tapPosB.x, y: tapPosB.y);
+  late FigureStore mockStore;
+  late UserInteraction userInteraction;
+  late Function() storeAdd;
+
+  setUp(() {
+    mockStore = MockFigureStore();
+    userInteraction = UserInteraction(2, mockStore);
+    storeAdd = () => mockStore.add(captureAny());
   });
+
+  group('Assert many tap add anchor', () {
+    test('in the same figure when it is not full', () {
+      simulateTap(userInteraction, [tapPosA, tapPosB]);
+      final paramList = verify(storeAdd).captured.cast<Figure>();
+      expect(paramList[1].contains(anchorA), isTrue);
+      expect(paramList[1].contains(anchorB), isTrue);
+      expect(paramList[0].groupID, equals(paramList[1].groupID));
+    });
+
+    test('in different figure when it is full', () {
+      simulateTap(userInteraction, [tapPosA, tapPosB, tapPosB]);
+      final paramList = verify(storeAdd).captured.cast<Figure>();
+      final figure1 = paramList[0];
+      final figure2 = paramList[2];
+      expect(figure1.groupID, isNot(equals(figure2.groupID)));
+    });
+  });
+}
+
+void simulateTap(UserInteraction interaction, List<VirtualCoord> taps) {
+  for (final tap in taps) {
+    interaction.onTap(tap);
+  }
 }

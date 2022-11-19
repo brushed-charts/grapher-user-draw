@@ -6,7 +6,7 @@ class Figure {
   final _anchors = <Anchor>[];
   final int? maxLength;
   int get length => _anchors.length;
-  contains(Anchor anchor) => _anchors.contains(anchor);
+  bool contains(Anchor anchor) => _anchors.contains(anchor);
 
   Figure(this.maxLength);
 
