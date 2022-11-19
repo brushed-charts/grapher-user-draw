@@ -73,6 +73,12 @@ void testIfFigureContainAnAnchor() {
       final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
       expect(figure.contains(anchorB), isFalse);
     });
+    test('present although objects are differents but with the same value', () {
+      final figure = Figure(2);
+      final anchorB = Anchor(x: DateTime(2022, 11, 19, 19), y: 7857);
+      figure.add(anchorA);
+      expect(figure.contains(anchorB), isTrue);
+    });
   });
 }
 
