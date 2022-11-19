@@ -9,6 +9,7 @@ void main() {
   testPathCreation();
   testFigureGroupIDGeneration();
   testFigureIsFull();
+  testIfFigureContainAnAnchor();
 }
 
 void testPathCreation() {
@@ -47,6 +48,30 @@ void testFigureIsFull() {
       final figure = Figure(4);
       addAnchorsToFigure(3, figure);
       expect(figure.isFull(), isFalse);
+    });
+  });
+}
+
+void testIfFigureContainAnAnchor() {
+  group('Inside Figure assert anchor is', () {
+    final anchorA = Anchor(x: DateTime(2022, 11, 19, 19), y: 7857);
+    test('present after added it', () {
+      final figure = Figure(2);
+      final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
+      figure.add(anchorA);
+      figure.add(anchorB);
+      expect(figure.contains(anchorB), isTrue);
+    });
+    test('not present when anchors are differents', () {
+      final figure = Figure(2);
+      final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
+      figure.add(anchorA);
+      expect(figure.contains(anchorB), isFalse);
+    });
+    test('not present when nothing was added', () {
+      final figure = Figure(2);
+      final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
+      expect(figure.contains(anchorB), isFalse);
     });
   });
 }
