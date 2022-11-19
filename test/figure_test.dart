@@ -8,12 +8,7 @@ class MockAnchor extends Mock implements Anchor {}
 void main() {
   testPathCreation();
   testFigureGroupIDGeneration();
-}
-
-void addAnchorsToFigure(int anchorCount, Figure figure) {
-  for (int i = 0; i < anchorCount; i++) {
-    figure.add(MockAnchor());
-  }
+  testFigureIsFull();
 }
 
 void testPathCreation() {
@@ -24,7 +19,6 @@ void testPathCreation() {
       addAnchorsToFigure(anchorCount, figure);
       expect(figure.length, equals(anchorCount));
     });
-
     test('if anchor count exceed the limit length', () {
       const figureLength = 4;
       final fig = Figure(figureLength);
@@ -40,4 +34,25 @@ void testFigureGroupIDGeneration() {
     final fig2 = Figure(figLength);
     expect(fig1.groupID, isNot(equals(fig2.groupID)));
   });
+}
+
+void testFigureIsFull() {
+  group('Test figure full function', () {
+    test('when anchor count reach the limit', () {
+      final figure = Figure(4);
+      addAnchorsToFigure(4, figure);
+      expect(figure.isFull(), isTrue);
+    });
+    test('when anchor still have room', () {
+      final figure = Figure(4);
+      addAnchorsToFigure(3, figure);
+      expect(figure.isFull(), isFalse);
+    });
+  });
+}
+
+void addAnchorsToFigure(int anchorCount, Figure figure) {
+  for (int i = 0; i < anchorCount; i++) {
+    figure.add(MockAnchor());
+  }
 }
