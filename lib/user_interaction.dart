@@ -15,7 +15,7 @@ class UserInteraction {
   void onTap(VirtualCoord coord) {
     _initFigureIfNeeded();
     _currentFigure!.add(Anchor(x: coord.x, y: coord.y));
-    _store.add(_currentFigure!);
+    _store.upsert(_currentFigure!);
   }
 
   void _initFigureIfNeeded() {

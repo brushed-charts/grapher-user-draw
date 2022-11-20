@@ -21,7 +21,7 @@ void main() {
   setUp(() {
     mockStore = MockFigureStore();
     userInteraction = UserInteraction(2, mockStore);
-    storeAdd = () => mockStore.add(captureAny());
+    storeAdd = () => mockStore.upsert(captureAny());
   });
 
   group('Assert many tap add anchor', () {

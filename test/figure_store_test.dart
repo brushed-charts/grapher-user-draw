@@ -6,7 +6,7 @@ void main() {
   test('Test figures can be added to the store and retrieved by ID', () {
     final store = FigureStore();
     final expectedFigure = Figure(1);
-    store.add(expectedFigure);
+    store.upsert(expectedFigure);
     final retrievedFigure = store.getByID(expectedFigure.groupID);
     expect(retrievedFigure, equals(expectedFigure));
   });

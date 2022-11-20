@@ -4,7 +4,7 @@ class FigureStore {
   final _figures = <int, Figure>{};
   int get length => _figures.length;
 
-  void add(Figure figure) {
+  void upsert(Figure figure) {
     _figures[figure.groupID] = figure;
   }
 
