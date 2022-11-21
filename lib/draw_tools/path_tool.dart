@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
+import 'package:grapher_user_draw/draw_tools/draw_info.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
 import '../figure.dart';
@@ -15,7 +16,7 @@ abstract class PathTool implements DrawToolInterface {
   PathTool(this._canvas, this._coordTranslater);
 
   @override
-  draw(Canvas canvas, Figure figure) {
+  draw(DrawInfo info, Figure figure) {
     for (final anchor in figure.getAll()) {
       _drawAnchor(anchor);
     }

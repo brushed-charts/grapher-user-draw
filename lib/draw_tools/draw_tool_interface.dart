@@ -1,8 +1,9 @@
 import 'dart:ui';
 
 import '../figure.dart';
+import 'draw_info.dart';
 
 abstract class DrawToolInterface {
   abstract int maxLength;
-  draw(Canvas canvas, Figure figure);
+  draw(DrawInfo drawInfo, Figure figure);
 }
