@@ -11,6 +11,7 @@ void main() {
   testFigureIsFull();
   testIfFigureContainAnAnchor();
   testFigureCantHaveLessThanOneAnchor();
+  testFigureGetAllAnchors();
 }
 
 void testFigureCantHaveLessThanOneAnchor() {
@@ -88,6 +89,17 @@ void testIfFigureContainAnAnchor() {
       figure.add(anchorA);
       expect(figure.contains(anchorB), isTrue);
     });
+  });
+}
+
+void testFigureGetAllAnchors() {
+  test("Assert getAll() function of figure return the anchor list", () {
+    final figure = Figure(2);
+    final expectedMockAnchor1 = MockAnchor();
+    final expectedMockAnchor2 = MockAnchor();
+    figure.add(expectedMockAnchor1);
+    figure.add(expectedMockAnchor2);
+    expect(figure.getAll(), equals([expectedMockAnchor1, expectedMockAnchor2]));
   });
 }
 

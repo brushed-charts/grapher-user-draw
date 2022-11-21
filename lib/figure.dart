@@ -25,4 +25,6 @@ class Figure {
     if (_anchors.length == maxLength) return true;
     return false;
   }
+
+  List<Anchor> getAll() => _anchors;
 }

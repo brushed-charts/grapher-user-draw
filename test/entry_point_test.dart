@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
+import 'package:grapher_user_draw/draw_tools/path_tool.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
 import 'package:mocktail/mocktail.dart';

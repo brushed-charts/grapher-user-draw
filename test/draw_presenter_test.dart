@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/drawEvent.dart';
 import 'package:grapher/kernel/drawZone.dart';
-import 'package:grapher_user_draw/draw_tool_interface.dart';
+import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/figure.dart';
-import 'package:grapher_user_draw/presenter.dart';
+import 'package:grapher_user_draw/draw_presenter.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockDrawTool extends Mock implements DrawToolInterface {}
@@ -23,7 +23,7 @@ void main() {
   late DrawPresenter presenter;
   late Function() toolDraw;
   registerFallbackValue(Figure(1));
-  registerFallbackValue(drawEvent);
+  registerFallbackValue(mockCanvas);
 
   setUp(() {
     mockTool = MockDrawTool();
@@ -31,17 +31,10 @@ void main() {
     toolDraw = () => mockTool.draw(captureAny(), captureAny());
   });
 
-  group('Assert tool draw function', () {
-    test("is not called when presenter didn't received DrawEvent", () {
-      presenter.draw(mockFigure);
-      verifyNever(toolDraw);
-    });
-    test('is called when DrawEvent was prior received ', () {
-      presenter.onDrawEvent(drawEvent);
-      presenter.draw(mockFigure);
-      final capturedParams = verify(toolDraw).captured;
-      expect(capturedParams[0], equals(drawEvent));
-      expect(capturedParams[1], equals(mockFigure));
-    });
+  test('Assert tool draw function is called on presenter draw', () {
+    presenter.draw(drawEvent, mockFigure);
+    final capturedParams = verify(toolDraw).captured;
+    expect(capturedParams[0], equals(mockCanvas));
+    expect(capturedParams[1], equals(mockFigure));
   });
 }
