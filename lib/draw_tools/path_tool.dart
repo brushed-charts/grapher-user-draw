@@ -10,21 +10,25 @@ import 'draw_tool_interface.dart';
 
 abstract class PathTool implements DrawToolInterface {
   static const double anchorSize = 10;
-  late final Canvas _canvas;
-  final CoordTranslater _coordTranslater;
-
-  PathTool(this._canvas, this._coordTranslater);
+  late final Canvas canvas;
+  late final CoordTranslater coordTranslater;
 
   @override
   draw(DrawInfo info, Figure figure) {
+    _init(info);
     for (final anchor in figure.getAll()) {
       _drawAnchor(anchor);
     }
   }
 
+  _init(DrawInfo info) {
+    canvas = info.canvas;
+    coordTranslater = info.coordTranslater;
+  }
+
   _drawAnchor(Anchor anchor) {
-    final center = _coordTranslater.toPixel(VirtualCoord(anchor.x, anchor.y));
+    final center = coordTranslater.toPixel(VirtualCoord(anchor.x, anchor.y));
     if (center == null) return;
-    _canvas.drawCircle(center, anchorSize, Paint());
+    canvas.drawCircle(center, anchorSize, Paint());
   }
 }

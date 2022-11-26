@@ -7,6 +7,7 @@ import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
+import 'package:grapher_user_draw/refresh_service.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockGestureController extends Mock implements GestureController {}
@@ -25,6 +26,10 @@ class FakePointerPropagator extends GraphObject with SinglePropagator {
 }
 
 void main() {
+  test('not throw when GrapherUserDraw is called before', () {
+    final entrypoint = GrapherUserDraw();
+    expect(() => RefreshService.refresh(), returnsNormally);
+  });
   testGestureTransmitionToInterpreter();
 }
 
