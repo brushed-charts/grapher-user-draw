@@ -10,7 +10,8 @@ import 'package:grapher/view/view-event.dart';
 import 'package:grapher_user_draw/draw_tools/draw_info.dart';
 import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/figure.dart';
-import 'package:grapher_user_draw/draw_presenter.dart';
+import 'package:grapher_user_draw/presenter.dart';
+import 'package:grapher_user_draw/store.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockDrawTool extends Mock implements DrawToolInterface {}
@@ -25,10 +26,13 @@ class MockVirtualAxis extends Mock implements VirtualAxis {}
 
 class MockDrawInfo extends Mock implements DrawInfo {}
 
+class MockStore extends Mock implements FigureStore {}
+
 void main() {
   final Canvas mockCanvas = MockCanvas();
   final DrawZone drawZone = DrawZone(Offset.zero, const Size(500, 500));
   final DrawEvent drawEvent = DrawEvent(mockCanvas, drawZone);
+  final mockStore = MockStore();
   final ViewEvent viewEvent = ViewEvent(
     drawEvent,
     MockUnitAxis(),
@@ -44,14 +48,19 @@ void main() {
 
   setUp(() {
     mockTool = MockDrawTool();
-    presenter = DrawPresenter(tool: mockTool);
+    presenter = DrawPresenter(mockTool, mockStore);
     toolDraw = () => mockTool.draw(captureAny(), captureAny());
   });
 
   test("Assert tool's draw function is called on presenter draw", () {
-    presenter.draw(viewEvent, mockFigure);
-    final capturedParams = verify(toolDraw).captured;
+    when(() => mockStore.getAll()).thenReturn([mockFigure, MockFigure()]);
+    presenter.draw(viewEvent);
+
+    final toolDrawCallResult = verify(toolDraw);
+    final capturedParams = toolDrawCallResult.captured;
     final captureDrawInfo = capturedParams[0] as DrawInfo;
+
+    toolDrawCallResult.called(2);
     expect(captureDrawInfo.canvas, equals(mockCanvas));
     expect(captureDrawInfo.event, equals(viewEvent));
     expect(capturedParams[1], equals(mockFigure));

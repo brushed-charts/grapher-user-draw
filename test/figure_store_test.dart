@@ -26,9 +26,10 @@ void addFiguresToStore(FigureStore store, List<Figure> figureList) {
 }
 
 List<Figure> generateFigures(int count) {
+  const aRandomPickedCount = 3;
   final figList = <Figure>[];
   for (int i = 0; i < count; i++) {
-    figList.add(Figure(3));
+    figList.add(Figure(aRandomPickedCount));
   }
   return figList;
 }
