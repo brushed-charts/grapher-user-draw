@@ -10,4 +10,25 @@ void main() {
     final retrievedFigure = store.getByID(expectedFigure.groupID);
     expect(retrievedFigure, equals(expectedFigure));
   });
+
+  test('Retrieving all Figure from the store', () {
+    final store = FigureStore();
+    final figureList = generateFigures(5);
+    addFiguresToStore(store, figureList);
+    expect(store.getAll(), equals(figureList));
+  });
+}
+
+void addFiguresToStore(FigureStore store, List<Figure> figureList) {
+  for (final figure in figureList) {
+    store.upsert(figure);
+  }
+}
+
+List<Figure> generateFigures(int count) {
+  final figList = <Figure>[];
+  for (int i = 0; i < count; i++) {
+    figList.add(Figure(3));
+  }
+  return figList;
 }

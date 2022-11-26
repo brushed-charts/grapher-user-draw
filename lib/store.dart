@@ -11,4 +11,8 @@ class FigureStore {
   Figure? getByID(int groupID) {
     return _figures[groupID];
   }
+
+  List<Figure> getAll() {
+    return _figures.values.toList();
+  }
 }
