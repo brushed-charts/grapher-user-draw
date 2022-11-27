@@ -9,19 +9,27 @@ import '../figure.dart';
 import 'draw_tool_interface.dart';
 
 abstract class PathTool implements DrawToolInterface {
-  static const double anchorSize = 10;
-  late final Canvas canvas;
-  late final CoordTranslater coordTranslater;
+  static const double anchorSize = 5;
+  abstract final Paint paint;
+  late Canvas canvas;
+  late CoordTranslater coordTranslater;
 
   @override
   draw(DrawInfo info, Figure figure) {
-    _init(info);
+    _extractInfo(info);
+    _drawPath(figure);
+  }
+
+  _drawPath(Figure figure) {
+    Anchor? previousAnchor;
     for (final anchor in figure.getAll()) {
       _drawAnchor(anchor);
+      if (previousAnchor != null) _drawLink(previousAnchor, anchor);
+      previousAnchor = anchor;
     }
   }
 
-  _init(DrawInfo info) {
+  _extractInfo(DrawInfo info) {
     canvas = info.canvas;
     coordTranslater = info.coordTranslater;
   }
@@ -29,6 +37,13 @@ abstract class PathTool implements DrawToolInterface {
   _drawAnchor(Anchor anchor) {
     final center = coordTranslater.toPixel(VirtualCoord(anchor.x, anchor.y));
     if (center == null) return;
-    canvas.drawCircle(center, anchorSize, Paint());
+    canvas.drawCircle(center, anchorSize, paint);
+  }
+
+  _drawLink(Anchor prev, Anchor curr) {
+    final centerA = coordTranslater.toPixel(VirtualCoord(prev.x, prev.y));
+    final centerB = coordTranslater.toPixel(VirtualCoord(curr.x, curr.y));
+    if (centerA == null || centerB == null) return;
+    canvas.drawLine(centerA, centerB, paint);
   }
 }
