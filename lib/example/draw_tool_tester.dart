@@ -8,7 +8,9 @@ class DrawToolTester extends PathTool {
   int maxLength = 3;
 
   @override
-  Paint paint = Paint()..color = Colors.lightBlue;
+  Paint paint = Paint()
+    ..color = Colors.lightBlue
+    ..strokeWidth = 2;
 
   DrawToolTester();
 }
