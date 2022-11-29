@@ -15,7 +15,7 @@ class GrapherUserDraw extends Viewable with EndlinePropagator {
   late final DrawPresenter _drawPresenter;
   final DrawToolInterface _tool;
   final FigureStore _store = FigureStore();
-  late final UserInteractionInterface _userInteraction;
+  late UserInteractionInterface _userInteraction;
 
   GrapherUserDraw({
     required DrawToolInterface tool,
