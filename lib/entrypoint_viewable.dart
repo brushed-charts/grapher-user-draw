@@ -25,7 +25,10 @@ class GrapherUserDraw extends Viewable with EndlinePropagator {
     _userInteraction = UserInteraction(tool.maxLength, _store);
     _gestureController =
         gestureController ?? GestureController(interactor: _userInteraction);
+    registerGestureController();
+  }
 
+  void registerGestureController() {
     eventRegistry.add(TapDownDetails, (p0) => _gestureController.onTapDown(p0));
     eventRegistry.add(DragUpdateDetails, (p0) => _gestureController.onDrag(p0));
     eventRegistry.add(TapUpDetails, (p0) => handleTapUp(p0));

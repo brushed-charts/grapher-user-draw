@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
 import 'package:grapher_user_draw/user_interaction.dart';
@@ -16,6 +17,7 @@ void main() {
   TestGestureController().testInterpretationOfTap();
   TestGestureController().testDragInterpreter();
   TestGestureController().testThereIsNoCallWhenVCoordIsNull();
+  TestGestureController().expectPointerOutOfDrawZoneIsIgnored();
 }
 
 class TestGestureController {
@@ -23,6 +25,7 @@ class TestGestureController {
   late final UserInteraction _userInteraction;
   late final CoordTranslater _coordTranslator;
   final outputVCoord = VirtualCoord(DateTime(2022, 11, 17, 15), 1495);
+  final _safeDrawZone = DrawZone(const Offset(0, 0), const Size(10000, 10000));
 
   TestGestureController() {
     registerFallBacks();
@@ -31,6 +34,8 @@ class TestGestureController {
       interactor: _userInteraction,
       translator: _coordTranslator,
     );
+    _controller.drawZone = _safeDrawZone;
+
     mockTranslationToVirtual() => _coordTranslator.toVirtual(any());
     when(() => mockTranslationToVirtual()).thenReturn(outputVCoord);
   }
@@ -87,6 +92,30 @@ class TestGestureController {
 
       test('assert that Drag() is called multiple times', () {
         verify(() => _userInteraction.onDrag(any())).called(dragCount);
+      });
+    });
+  }
+
+  void expectPointerOutOfDrawZoneIsIgnored() {
+    group('When pointer is out of the DrawZone', () {
+      const tapPos = Offset(100, 10);
+      final drawZone = DrawZone(const Offset(0, 500), const Size(1000, 500));
+      _controller.drawZone = drawZone;
+      test('Expect UserInteraction\'s Tap is ignored', () {
+        _controller.onTapDown(TapDownDetails(localPosition: tapPos));
+        _controller.onTapUp(TapUpDetails(
+          kind: PointerDeviceKind.unknown,
+          localPosition: tapPos,
+        ));
+        verifyNever(() => _userInteraction.onTap(any()));
+      });
+      test('Expect UserInteraction\'s Drag is ignored', () {
+        _controller.onTapDown(TapDownDetails(localPosition: tapPos));
+        _controller.onTapUp(TapUpDetails(
+          kind: PointerDeviceKind.unknown,
+          localPosition: tapPos,
+        ));
+        verifyNever(() => _userInteraction.onTap(any()));
       });
     });
   }
