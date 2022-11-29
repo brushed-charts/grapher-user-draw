@@ -1,17 +1,18 @@
 import 'package:flutter/widgets.dart';
 import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/user_interaction.dart';
+import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
 class GestureController {
-  final UserInteraction _interactor;
+  final CreationInteraction _interactor;
   CoordTranslater? _translator;
-  DrawZone? drawZone;
+  DrawZone? _drawZone;
 
-  GestureController({CoordTranslater? translator, UserInteraction? interactor})
+  GestureController(
+      {CoordTranslater? translator, CreationInteraction? interactor})
       : _translator = translator,
-        _interactor = interactor ?? UserInteraction(2);
+        _interactor = interactor ?? CreationInteraction(2);
   bool _hasMoved = false;
 
   void onTapDown(TapDownDetails event) {
@@ -35,7 +36,7 @@ class GestureController {
   }
 
   bool _isInDrawZone(Offset position) {
-    return drawZone?.toRect.contains(position) ?? false;
+    return _drawZone?.toRect.contains(position) ?? false;
   }
 
   VirtualCoord? _convertToVirtual(Offset position) {
@@ -43,4 +44,5 @@ class GestureController {
   }
 
   updateTranslator(CoordTranslater translater) => _translator = translater;
+  updateDrawZone(DrawZone drawZone) => _drawZone = drawZone;
 }

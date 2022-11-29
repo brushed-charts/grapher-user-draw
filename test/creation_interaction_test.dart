@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/figure.dart';
 import 'package:grapher_user_draw/store.dart';
-import 'package:grapher_user_draw/user_interaction.dart';
+import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -15,12 +15,12 @@ void main() {
   final anchorA = Anchor(x: tapPosA.x, y: tapPosA.y);
   final anchorB = Anchor(x: tapPosB.x, y: tapPosB.y);
   late FigureStore mockStore;
-  late UserInteraction userInteraction;
+  late CreationInteraction userInteraction;
   late Function() storeAdd;
 
   setUp(() {
     mockStore = MockFigureStore();
-    userInteraction = UserInteraction(2, mockStore);
+    userInteraction = CreationInteraction(2, mockStore);
     storeAdd = () => mockStore.upsert(captureAny());
   });
 
@@ -43,7 +43,7 @@ void main() {
   });
 }
 
-void simulateTap(UserInteraction interaction, List<VirtualCoord> taps) {
+void simulateTap(CreationInteraction interaction, List<VirtualCoord> taps) {
   for (final tap in taps) {
     interaction.onTap(tap);
   }

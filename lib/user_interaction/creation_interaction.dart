@@ -1,17 +1,19 @@
 import 'package:grapher_user_draw/store.dart';
+import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
-import 'anchor.dart';
-import 'figure.dart';
+import 'package:grapher_user_draw/anchor.dart';
+import 'package:grapher_user_draw/figure.dart';
 
-class UserInteraction {
+class CreationInteraction implements UserInteraction {
   final FigureStore _store;
   Figure? _currentFigure;
   final int figureLength;
 
-  UserInteraction(this.figureLength, [FigureStore? store])
+  CreationInteraction(this.figureLength, [FigureStore? store])
       : _store = store ?? FigureStore();
 
+  @override
   void onTap(VirtualCoord coord) {
     _initFigureIfNeeded();
     _currentFigure!.add(Anchor(x: coord.x, y: coord.y));
@@ -24,5 +26,6 @@ class UserInteraction {
     _currentFigure = Figure(figureLength);
   }
 
+  @override
   void onDrag(VirtualCoord coord) {}
 }
