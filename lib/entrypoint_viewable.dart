@@ -26,7 +26,7 @@ class GrapherUserDraw extends Viewable with EndlinePropagator {
     _interactionHolder =
         UserInteractionHolder(CreationInteraction(tool.maxLength, _store));
     _gestureController = gestureController ??
-        GestureController(interactor: _interactionHolder.interface);
+        GestureController(interactionHolder: _interactionHolder);
     registerGestureController();
   }
 

@@ -6,6 +6,7 @@ import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
+import 'package:grapher_user_draw/user_interaction/holder_user_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -23,6 +24,7 @@ void main() {
 class TestGestureController {
   late final GestureController _controller;
   late final CreationInteraction _userInteraction;
+  late final UserInteractionHolder _interactionHolder;
   late final CoordTranslater _coordTranslator;
   final outputVCoord = VirtualCoord(DateTime(2022, 11, 17, 15), 1495);
   final _safeDrawZone = DrawZone(const Offset(0, 0), const Size(10000, 10000));
@@ -30,8 +32,9 @@ class TestGestureController {
   TestGestureController() {
     registerFallBacks();
     initMocks();
+    _interactionHolder = UserInteractionHolder(_userInteraction);
     _controller = GestureController(
-      interactor: _userInteraction,
+      interactionHolder: _interactionHolder,
       translator: _coordTranslator,
     );
     _controller.updateDrawZone(_safeDrawZone);
