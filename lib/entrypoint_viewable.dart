@@ -8,13 +8,14 @@ import 'package:grapher_user_draw/gesture_controller.dart';
 import 'package:grapher_user_draw/presenter.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
+import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
 
 class GrapherUserDraw extends Viewable with EndlinePropagator {
   late final GestureController _gestureController;
   late final DrawPresenter _drawPresenter;
   final DrawToolInterface _tool;
   final FigureStore _store = FigureStore();
-  late final CreationInteraction _userInteraction;
+  late final UserInteractionInterface _userInteraction;
 
   GrapherUserDraw({
     required DrawToolInterface tool,

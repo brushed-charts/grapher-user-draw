@@ -2,15 +2,16 @@ import 'package:flutter/widgets.dart';
 import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
+import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
 class GestureController {
-  final CreationInteraction _interactor;
+  final UserInteractionInterface _interactor;
   CoordTranslater? _translator;
   DrawZone? _drawZone;
 
   GestureController(
-      {CoordTranslater? translator, CreationInteraction? interactor})
+      {CoordTranslater? translator, UserInteractionInterface? interactor})
       : _translator = translator,
         _interactor = interactor ?? CreationInteraction(2);
   bool _hasMoved = false;

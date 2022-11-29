@@ -5,7 +5,7 @@ import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/figure.dart';
 
-class CreationInteraction implements UserInteraction {
+class CreationInteraction implements UserInteractionInterface {
   final FigureStore _store;
   Figure? _currentFigure;
   final int figureLength;
