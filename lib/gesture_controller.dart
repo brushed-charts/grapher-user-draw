@@ -1,20 +1,20 @@
 import 'package:flutter/widgets.dart';
 import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/user_interaction/holder_user_interaction.dart';
+import 'package:grapher_user_draw/interaction_reference.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
 class GestureController {
-  final UserInteractionHolder _interactorHolder;
+  final InteractionReference _interactorRef;
   CoordTranslater? _translator;
   DrawZone? _drawZone;
   bool _hasMoved = false;
 
   GestureController(
       {CoordTranslater? translator,
-      required UserInteractionHolder interactionHolder})
+      required InteractionReference interactionReference})
       : _translator = translator,
-        _interactorHolder = interactionHolder;
+        _interactorRef = interactionReference;
 
   void onTapDown(TapDownDetails event) {
     _hasMoved = false;
@@ -25,7 +25,7 @@ class GestureController {
     if (!_isInDrawZone(event.localPosition)) return;
     final vCoord = _convertToVirtual(event.localPosition);
     if (vCoord == null) return;
-    _interactorHolder.interface.onTap(vCoord);
+    _interactorRef.interface.onTap(vCoord);
   }
 
   void onDrag(DragUpdateDetails event) {
@@ -33,7 +33,7 @@ class GestureController {
     if (!_isInDrawZone(event.localPosition)) return;
     final vCoord = _convertToVirtual(event.localPosition);
     if (vCoord == null) return;
-    _interactorHolder.interface.onDrag(vCoord);
+    _interactorRef.interface.onDrag(vCoord);
   }
 
   bool _isInDrawZone(Offset position) {

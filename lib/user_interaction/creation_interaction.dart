@@ -10,8 +10,7 @@ class CreationInteraction implements UserInteractionInterface {
   Figure? _currentFigure;
   final int figureLength;
 
-  CreationInteraction(this.figureLength, [FigureStore? store])
-      : _store = store ?? FigureStore();
+  CreationInteraction(this.figureLength, this._store);
 
   @override
   void onTap(VirtualCoord coord) {
