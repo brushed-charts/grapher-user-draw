@@ -28,17 +28,12 @@ class FakePointerPropagator extends GraphObject with SinglePropagator {
 }
 
 void main() {
-  testGestureTransmitionToInterpreter();
-}
-
-void testGestureTransmitionToInterpreter() {
   group('Test gesture transmition to interpreter', () {
     final mockDrawTool = MockDrawTool();
     when(() => mockDrawTool.maxLength).thenReturn(3);
 
     final mockcontroller = MockGestureController();
-    final entrypoint =
-        GrapherUserDraw(tool: mockDrawTool, gestureController: mockcontroller);
+    final entrypoint = GrapherUserDraw(gestureController: mockcontroller);
     final fakePropagator = FakePointerPropagator(entrypoint);
     GraphKernel(child: fakePropagator);
 

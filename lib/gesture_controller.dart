@@ -1,10 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:grapher/kernel/drawZone.dart';
+import 'package:grapher/kernel/object.dart';
+import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/interaction_reference.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
-class GestureController {
+class GestureController extends GraphObject with EndlinePropagator {
   final InteractionReference _interactorRef;
   CoordTranslater? _translator;
   DrawZone? _drawZone;
@@ -14,7 +16,14 @@ class GestureController {
       {CoordTranslater? translator,
       required InteractionReference interactionReference})
       : _translator = translator,
-        _interactorRef = interactionReference;
+        _interactorRef = interactionReference {
+    _registerGestureController();
+  }
+
+  void _registerGestureController() {
+    eventRegistry.add(TapDownDetails, (p0) => onTapDown(p0));
+    eventRegistry.add(DragUpdateDetails, (p0) => onDrag(p0));
+  }
 
   void onTapDown(TapDownDetails event) {
     _hasMoved = false;
@@ -26,6 +35,7 @@ class GestureController {
     final vCoord = _convertToVirtual(event.localPosition);
     if (vCoord == null) return;
     _interactorRef.interface.onTap(vCoord);
+    setState(this);
   }
 
   void onDrag(DragUpdateDetails event) {

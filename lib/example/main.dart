@@ -91,7 +91,7 @@ class App extends StatelessWidget {
                                 child: PipeIn(
                                     name: 'pipe_cell',
                                     eventType: CellEvent)))))),
-            GrapherUserDraw(tool: DrawToolTester())
+            GrapherUserDraw()
           ]))))),
     ]));
   }
