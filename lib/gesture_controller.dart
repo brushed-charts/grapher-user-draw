@@ -3,7 +3,7 @@ import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/interaction_reference.dart';
+import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
 class GestureController extends GraphObject with EndlinePropagator {

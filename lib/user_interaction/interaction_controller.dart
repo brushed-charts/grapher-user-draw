@@ -1,7 +1,7 @@
 import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher_user_draw/draw_tools/draw_tool_event.dart';
-import 'package:grapher_user_draw/interaction_reference.dart';
+import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 
 class InteractionController extends GraphObject with EndlinePropagator {
   final InteractionReference interactionRef;

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
-import 'package:grapher_user_draw/interaction_reference.dart';
+import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
