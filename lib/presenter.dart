@@ -1,6 +1,7 @@
 import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/view/view-event.dart';
+import 'package:grapher/view/viewable.dart';
 import 'package:grapher_user_draw/draw_tools/draw_info.dart';
 import 'package:grapher_user_draw/draw_tools/draw_tool_event.dart';
 import 'package:grapher_user_draw/store.dart';
@@ -8,7 +9,7 @@ import 'package:grapher_user_draw/store.dart';
 import 'draw_tools/draw_tool_interface.dart';
 import 'figure.dart';
 
-class DrawPresenter extends GraphObject with EndlinePropagator {
+class DrawPresenter extends Viewable with EndlinePropagator {
   DrawToolInterface? _tool;
   final FigureStore _store;
   late DrawInfo drawInfo;
@@ -21,8 +22,9 @@ class DrawPresenter extends GraphObject with EndlinePropagator {
     _tool = event.tool;
   }
 
-  void draw(ViewEvent event) {
-    drawInfo = DrawInfo(event);
+  @override
+  void draw(ViewEvent viewEvent) {
+    drawInfo = DrawInfo(viewEvent);
     _store.getAll().forEach((figure) {
       _drawFigure(figure);
     });

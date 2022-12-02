@@ -36,7 +36,6 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
     final coordTranslator = CoordTranslater(viewEvent.xAxis, viewEvent.yAxis);
     _gestureController.updateTranslator(coordTranslator);
     _gestureController.updateDrawZone(viewEvent.drawZone);
-    _drawPresenter.draw(viewEvent);
     propagate(viewEvent);
   }
 }
