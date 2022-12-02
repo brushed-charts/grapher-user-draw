@@ -21,7 +21,7 @@ import 'package:grapher/view/window.dart';
 import 'package:flutter/material.dart';
 import 'package:grapher/pointer/widget.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
-import 'package:grapher_user_draw/example/draw_tool_tester.dart';
+import 'package:grapher_user_draw/example/fake_tool_propagator.dart';
 
 import 'json.dart';
 
@@ -91,7 +91,7 @@ class App extends StatelessWidget {
                                 child: PipeIn(
                                     name: 'pipe_cell',
                                     eventType: CellEvent)))))),
-            GrapherUserDraw()
+            FakeToolPropagator(child: GrapherUserDraw())
           ]))))),
     ]));
   }

@@ -6,6 +6,7 @@ import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
 import 'package:grapher_user_draw/interaction_reference.dart';
+import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
@@ -26,13 +27,14 @@ class TestGestureController {
   late final CreationInteraction _userInteraction;
   late final InteractionReference _interactionRef;
   late final CoordTranslater _coordTranslator;
+  final _store = FigureStore();
   final outputVCoord = VirtualCoord(DateTime(2022, 11, 17, 15), 1495);
   final _safeDrawZone = DrawZone(const Offset(0, 0), const Size(10000, 10000));
 
   TestGestureController() {
     registerFallBacks();
     initMocks();
-    _interactionRef = InteractionReference();
+    _interactionRef = InteractionReference(_store);
     _interactionRef.interface = _userInteraction;
     _controller = GestureController(
       interactionReference: _interactionRef,

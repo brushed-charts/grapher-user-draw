@@ -16,14 +16,7 @@ class GestureController extends GraphObject with EndlinePropagator {
       {CoordTranslater? translator,
       required InteractionReference interactionReference})
       : _translator = translator,
-        _interactorRef = interactionReference {
-    _registerGestureController();
-  }
-
-  void _registerGestureController() {
-    eventRegistry.add(TapDownDetails, (p0) => onTapDown(p0));
-    eventRegistry.add(DragUpdateDetails, (p0) => onDrag(p0));
-  }
+        _interactorRef = interactionReference;
 
   void onTapDown(TapDownDetails event) {
     _hasMoved = false;

@@ -56,6 +56,8 @@ void main() {
   late DrawToolInterface mockTool;
   late DrawPresenter presenter;
   late Function() toolDraw;
+
+  when(() => mockStore.length).thenReturn(3);
   registerFallbackValue(Figure(1));
   registerFallbackValue(DrawInfo(viewEvent));
 

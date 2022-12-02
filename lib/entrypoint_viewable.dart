@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:grapher/kernel/linkEvent.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/multi.dart';
 import 'package:grapher/view/view-event.dart';
@@ -15,7 +16,7 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
   late final GestureController _gestureController;
   late final DrawPresenter _drawPresenter;
   final FigureStore _store = FigureStore();
-  final _interactionRef = InteractionReference();
+  late final _interactionRef = InteractionReference(_store);
 
   GrapherUserDraw(
       {GestureController? gestureController, DrawPresenter? drawPresenter}) {
@@ -25,14 +26,17 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
     children = <GraphObject>[];
     children.add(InteractionController(_interactionRef));
     children.add(PointerController(_gestureController));
+    children.add(_gestureController);
+    children.add(_drawPresenter);
   }
 
   @override
-  void draw(covariant ViewEvent viewEvent) {
+  void draw(ViewEvent viewEvent) {
     super.draw(viewEvent);
     final coordTranslator = CoordTranslater(viewEvent.xAxis, viewEvent.yAxis);
     _gestureController.updateTranslator(coordTranslator);
     _gestureController.updateDrawZone(viewEvent.drawZone);
     _drawPresenter.draw(viewEvent);
+    propagate(viewEvent);
   }
 }
