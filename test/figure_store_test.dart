@@ -17,6 +17,14 @@ void main() {
     addFiguresToStore(store, figureList);
     expect(store.getAll(), equals(figureList));
   });
+
+  test('Figure store length function return the right result', () {
+    const expectedLength = 5;
+    final store = FigureStore();
+    final figureList = generateFigures(5);
+    addFiguresToStore(store, figureList);
+    expect(store.length, equals(expectedLength));
+  });
 }
 
 void addFiguresToStore(FigureStore store, List<Figure> figureList) {

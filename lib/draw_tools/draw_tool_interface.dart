@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import '../figure.dart';
 import 'draw_info.dart';
 
