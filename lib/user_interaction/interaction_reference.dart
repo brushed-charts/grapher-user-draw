@@ -1,7 +1,7 @@
 import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher/view/viewable.dart';
 import 'package:grapher_user_draw/store.dart';
-import 'package:grapher_user_draw/user_interaction/anchor_range_selection.dart';
+import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
 import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';

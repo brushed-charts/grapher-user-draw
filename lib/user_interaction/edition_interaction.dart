@@ -1,6 +1,5 @@
-import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/store.dart';
-import 'package:grapher_user_draw/user_interaction/anchor_range_selection.dart';
+import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
 import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 

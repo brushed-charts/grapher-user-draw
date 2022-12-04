@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/view/axis/virtual-axis.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/user_interaction/anchor_range_selection.dart';
+import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockVirtualAxis extends Mock implements VirtualAxis {}
