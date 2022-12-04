@@ -1,6 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/figure.dart';
 import 'package:grapher_user_draw/store.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockFigure extends Mock implements Figure {
+  @override
+  final int groupID;
+  MockFigure({required this.groupID});
+}
 
 void main() {
   test('Test figures can be added to the store and retrieved by ID', () {
@@ -11,19 +19,38 @@ void main() {
     expect(retrievedFigure, equals(expectedFigure));
   });
 
-  test('Retrieving all Figure from the store', () {
+  test('Test retrieving all Figure from the store', () {
     final store = FigureStore();
     final figureList = generateFigures(5);
     addFiguresToStore(store, figureList);
     expect(store.getAll(), equals(figureList));
   });
 
-  test('Figure store length function return the right result', () {
+  test('Test Figure store length function return the right result', () {
     const expectedLength = 5;
     final store = FigureStore();
     final figureList = generateFigures(5);
     addFiguresToStore(store, figureList);
     expect(store.length, equals(expectedLength));
+  });
+
+  test('Retriving anchors by datetime', () {
+    registerFallbackValue(DateTime.now());
+    final searchDate = DateTime(2022, 12, 04, 01);
+    final wrongDate = DateTime(2022, 10, 04, 01);
+    final anchorA = Anchor(x: searchDate, y: 2356);
+    final anchorC = Anchor(x: searchDate, y: 2356);
+    final anchorB = Anchor(x: wrongDate, y: 906);
+
+    final figures = generateFigures(4);
+    figures[0].add(anchorA);
+    figures[1].add(anchorB);
+    figures[2].add(anchorC);
+
+    final store = FigureStore();
+    addFiguresToStore(store, figures);
+
+    expect(store.getByDatetime(searchDate), equals([anchorA, anchorC]));
   });
 }
 

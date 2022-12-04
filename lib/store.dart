@@ -1,3 +1,5 @@
+import 'package:grapher_user_draw/anchor.dart';
+
 import 'figure.dart';
 
 class FigureStore {
@@ -14,5 +16,15 @@ class FigureStore {
 
   List<Figure> getAll() {
     return _figures.values.toList();
+  }
+
+  List<Anchor> getByDatetime(DateTime searchDate) {
+    final figureList = getAll();
+    final concatedAnchors = <Anchor>[];
+    for (final figure in figureList) {
+      final matchingAnchors = figure.getByDatetime(searchDate);
+      concatedAnchors.addAll(matchingAnchors);
+    }
+    return concatedAnchors;
   }
 }

@@ -27,4 +27,8 @@ class Figure {
   }
 
   List<Anchor> getAll() => _anchors;
+
+  List<Anchor> getByDatetime(DateTime date) {
+    return _anchors.where((anchor) => anchor.x == date).toList();
+  }
 }

@@ -6,6 +6,8 @@ import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
 import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'gesture_controller_test.dart';
+
 class MockFigureStore extends Mock implements FigureStore {}
 
 class MockDrawTool extends Mock implements DrawToolInterface {}
@@ -36,5 +38,16 @@ void main() {
     interactionRef.tool = null;
     expect(interactionRef.interface, isInstanceOf<EditionInteraction>());
     expect(interactionRef.tool, isNull);
+  });
+
+  test(
+      "Check that InteractionReference "
+      "update the edition's coordTranslater", () {
+    final mockStore = MockFigureStore();
+    final interactionRef = InteractionReference(mockStore);
+    final mockCoordTranslater = MockCoordTranslator();
+    interactionRef.updateCoordTranslater(mockCoordTranslater);
+    final editionInteraction = interactionRef.interface as EditionInteraction;
+    expect(editionInteraction.coordTranslater, equals(mockCoordTranslater));
   });
 }

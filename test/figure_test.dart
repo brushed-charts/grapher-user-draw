@@ -6,100 +6,98 @@ import 'package:mocktail/mocktail.dart';
 class MockAnchor extends Mock implements Anchor {}
 
 void main() {
-  testPathCreation();
-  testFigureGroupIDGeneration();
-  testFigureIsFull();
-  testIfFigureContainAnAnchor();
-  testFigureCantHaveLessThanOneAnchor();
-  testFigureGetAllAnchors();
-}
+  const fiveAnchorsCount = 5;
+  late Figure figureLength4, figureLength5, figureLength2;
+  final anchorA = Anchor(x: DateTime(2022, 11, 19, 19), y: 7857);
+  final anchorB = Anchor(x: DateTime(2022, 12, 3, 02), y: 7857);
+  final anchorC = Anchor(x: DateTime(2022, 11, 19, 19), y: 893);
 
-void testFigureCantHaveLessThanOneAnchor() {
+  setUp(() {
+    figureLength2 = Figure(2);
+    figureLength4 = Figure(4);
+    figureLength5 = Figure(5);
+  });
+
   test("Assert Figure can't have a less than one anchor", () {
     expect(() => Figure(0), throwsArgumentError);
     expect(() => Figure(-1), throwsArgumentError);
     expect(() => Figure(1), returnsNormally);
   });
-}
 
-void testPathCreation() {
   group('Test adding anchor intto the figure', () {
-    const anchorCount = 5;
     test('if anchor count don\'t reach the limit', () {
-      final figure = Figure(anchorCount);
-      addAnchorsToFigure(anchorCount, figure);
-      expect(figure.length, equals(anchorCount));
+      addAnchorsToFigure(fiveAnchorsCount, figureLength5);
+      expect(figureLength5.length, equals(fiveAnchorsCount));
     });
     test('if anchor count exceed the limit length', () {
-      const figureLength = 4;
-      final fig = Figure(figureLength);
-      expect(() => addAnchorsToFigure(anchorCount, fig), throwsStateError);
+      exceededAnchorLimit() =>
+          addAnchorsToFigure(fiveAnchorsCount, figureLength4);
+      expect(exceededAnchorLimit, throwsStateError);
     });
   });
-}
 
-void testFigureGroupIDGeneration() {
   test('Assert figure creation generate an unique GroupID', () {
-    const figLength = 3;
-    final fig1 = Figure(figLength);
-    final fig2 = Figure(figLength);
-    expect(fig1.groupID, isNot(equals(fig2.groupID)));
+    expect(figureLength4.groupID, isNot(equals(figureLength5.groupID)));
   });
-}
 
-void testFigureIsFull() {
   group('Assert figure full function return', () {
     test('true when anchor count reach the limit', () {
-      final figure = Figure(4);
-      addAnchorsToFigure(4, figure);
-      expect(figure.isFull(), isTrue);
+      addAnchorsToFigure(4, figureLength4);
+      expect(figureLength4.isFull(), isTrue);
     });
     test('false when figure still have room', () {
-      final figure = Figure(4);
-      addAnchorsToFigure(3, figure);
-      expect(figure.isFull(), isFalse);
+      addAnchorsToFigure(3, figureLength4);
+      expect(figureLength4.isFull(), isFalse);
     });
   });
-}
 
-void testIfFigureContainAnAnchor() {
   group('Inside Figure assert anchor is', () {
-    final anchorA = Anchor(x: DateTime(2022, 11, 19, 19), y: 7857);
     test('present after added it', () {
-      final figure = Figure(2);
       final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
-      figure.add(anchorA);
-      figure.add(anchorB);
-      expect(figure.contains(anchorB), isTrue);
+      figureLength2.add(anchorA);
+      figureLength2.add(anchorB);
+      expect(figureLength2.contains(anchorB), isTrue);
     });
     test('not present when anchors are differents', () {
-      final figure = Figure(2);
       final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
-      figure.add(anchorA);
-      expect(figure.contains(anchorB), isFalse);
+      figureLength2.add(anchorA);
+      expect(figureLength2.contains(anchorB), isFalse);
     });
     test('not present when nothing was added', () {
-      final figure = Figure(2);
       final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
-      expect(figure.contains(anchorB), isFalse);
+      expect(figureLength2.contains(anchorB), isFalse);
     });
     test('present although objects are differents but with the same value', () {
-      final figure = Figure(2);
       final anchorB = Anchor(x: DateTime(2022, 11, 19, 19), y: 7857);
-      figure.add(anchorA);
-      expect(figure.contains(anchorB), isTrue);
+      figureLength2.add(anchorA);
+      expect(figureLength2.contains(anchorB), isTrue);
     });
   });
-}
 
-void testFigureGetAllAnchors() {
   test("Assert getAll() function of figure return the anchor list", () {
-    final figure = Figure(2);
     final expectedMockAnchor1 = MockAnchor();
     final expectedMockAnchor2 = MockAnchor();
-    figure.add(expectedMockAnchor1);
-    figure.add(expectedMockAnchor2);
-    expect(figure.getAll(), equals([expectedMockAnchor1, expectedMockAnchor2]));
+    figureLength2.add(expectedMockAnchor1);
+    figureLength2.add(expectedMockAnchor2);
+    expect(figureLength2.getAll(),
+        equals([expectedMockAnchor1, expectedMockAnchor2]));
+  });
+
+  group("Check Figure getByDatetime() returned anchor", () {
+    test('when anchors is present', () {
+      final searchDate = DateTime(2022, 11, 19, 19);
+      figureLength4.add(anchorA);
+      figureLength4.add(anchorB);
+      figureLength4.add(anchorC);
+      expect(
+          figureLength4.getByDatetime(searchDate), equals([anchorA, anchorC]));
+    });
+    test("when no anchor match", () {
+      final searchDate = DateTime(2022, 12, 04, 00, 54);
+      figureLength4.add(anchorA);
+      figureLength4.add(anchorB);
+      expect(figureLength4.getByDatetime(searchDate), equals([]));
+    });
   });
 }
 
