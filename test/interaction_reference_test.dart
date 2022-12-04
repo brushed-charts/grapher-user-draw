@@ -20,7 +20,7 @@ void main() {
 
   setUp(() {
     interactionRef =
-        InteractionReference(MockFigureStore(), MockAnchorRangeSelection());
+        InteractionReference(MockFigureStore(), MockAnchorSelectionCondition());
   });
 
   test(

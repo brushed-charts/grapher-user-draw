@@ -8,17 +8,17 @@ import '../anchor.dart';
 
 class EditionInteraction implements UserInteractionInterface {
   final FigureStore _store;
-  final AnchorRangeSelection _anchorSelector;
+  final AnchorYSelectionCondition _anchorSelectCondition;
   Anchor? _anchorSelected;
 
-  EditionInteraction(this._store, this._anchorSelector);
+  EditionInteraction(this._store, this._anchorSelectCondition);
 
   @override
   void onTap(VirtualCoord coord) {
     final matchingAnchors = _store.getByDatetime(coord.x);
     _anchorSelected = null;
     for (final anchor in matchingAnchors) {
-      if (!_anchorSelector.isCloseToPointer(coord.y, anchor.y)) continue;
+      if (!_anchorSelectCondition.isCloseToPointer(coord.y, anchor.y)) continue;
       _anchorSelected = anchor;
     }
   }

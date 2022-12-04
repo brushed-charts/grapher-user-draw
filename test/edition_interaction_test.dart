@@ -16,7 +16,7 @@ class MockCoordTranslator extends Mock implements CoordTranslater {}
 void main() {
   group("Test selectedAnchor when anchor selection condition", () {
     final mockStore = MockStore();
-    final mockSelectionCondition = MockAnchorRangeSelection();
+    final mockSelectionCondition = MockAnchorSelectionCondition();
 
     final randomPickedDate = DateTime(2022, 12, 04);
     const double randomMockValue1 = 1.7796;

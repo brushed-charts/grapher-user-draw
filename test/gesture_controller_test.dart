@@ -16,7 +16,8 @@ class MockUserInteraction extends Mock implements CreationInteraction {}
 
 class MockCoordTranslator extends Mock implements CoordTranslater {}
 
-class MockAnchorRangeSelection extends Mock implements AnchorRangeSelection {}
+class MockAnchorSelectionCondition extends Mock
+    implements AnchorYSelectionCondition {}
 
 void main() {
   TestGestureController().testInterpretationOfTap();
@@ -37,7 +38,8 @@ class TestGestureController {
   TestGestureController() {
     registerFallBacks();
     initMocks();
-    _interactionRef = InteractionReference(_store, MockAnchorRangeSelection());
+    _interactionRef =
+        InteractionReference(_store, MockAnchorSelectionCondition());
     _interactionRef.interface = _userInteraction;
     _controller = GestureController(
       interactionReference: _interactionRef,

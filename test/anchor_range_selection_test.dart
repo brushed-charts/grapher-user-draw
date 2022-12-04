@@ -19,16 +19,16 @@ void main() {
   const double wantedAnchorPixelPositionB = 5;
 
   final mockCoordTranslater = MockCoordTranslator();
-  final anchorSelection = AnchorRangeSelection();
-  anchorSelection.updateCoordTranslater(mockCoordTranslater);
+  final selectionCondition = AnchorYSelectionCondition();
+  selectionCondition.updateCoordTranslater(mockCoordTranslater);
   when(() => mockCoordTranslater.yAxis.toPixel(anyVirtualTapPos))
       .thenReturn(tapPixelPosition);
 
   test("When pointer tap close to an anchor expect it can be selectable", () {
     when(() => mockCoordTranslater.yAxis.toPixel(anyVirtualAnchorPos))
         .thenReturn(wantedAnchorPixelPositionA);
-    final isSelectable =
-        anchorSelection.isCloseToPointer(anyVirtualTapPos, anyVirtualAnchorPos);
+    final isSelectable = selectionCondition.isCloseToPointer(
+        anyVirtualTapPos, anyVirtualAnchorPos);
     expect(isSelectable, isTrue);
   });
   test(
@@ -36,8 +36,8 @@ void main() {
       "expect it is not selectable", () {
     when(() => mockCoordTranslater.yAxis.toPixel(anyVirtualAnchorPos))
         .thenReturn(wantedAnchorPixelPositionB);
-    final isSelectable =
-        anchorSelection.isCloseToPointer(anyVirtualTapPos, anyVirtualAnchorPos);
+    final isSelectable = selectionCondition.isCloseToPointer(
+        anyVirtualTapPos, anyVirtualAnchorPos);
     expect(isSelectable, isFalse);
   });
 }

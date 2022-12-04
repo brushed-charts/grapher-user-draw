@@ -12,15 +12,15 @@ class InteractionReference extends Viewable with EndlinePropagator {
   DrawToolInterface? _tool;
   UserInteractionInterface interface;
   final FigureStore _store;
-  final AnchorRangeSelection _anchorSelectionRange;
+  final AnchorYSelectionCondition _anchorSelectCondition;
 
-  InteractionReference(this._store, this._anchorSelectionRange)
-      : interface = EditionInteraction(_store, _anchorSelectionRange);
+  InteractionReference(this._store, this._anchorSelectCondition)
+      : interface = EditionInteraction(_store, _anchorSelectCondition);
 
   void _updateTool(DrawToolInterface? tool) {
     _tool = tool;
     if (tool == null) {
-      interface = EditionInteraction(_store, _anchorSelectionRange);
+      interface = EditionInteraction(_store, _anchorSelectCondition);
       return;
     }
     interface = CreationInteraction(tool.maxLength, _store);

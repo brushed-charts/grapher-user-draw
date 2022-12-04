@@ -1,6 +1,6 @@
 import 'package:grapher_user_draw/coord_translater.dart';
 
-class AnchorRangeSelection {
+class AnchorYSelectionCondition {
   static const double _selectionRange = 15;
   CoordTranslater? _coordTranslater;
 

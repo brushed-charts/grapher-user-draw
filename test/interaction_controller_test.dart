@@ -26,7 +26,7 @@ void main() {
   final mockTool = MockDrawTool();
   final event = DrawToolEvent(mockTool);
   final interactionRef =
-      InteractionReference(FigureStore(), MockAnchorRangeSelection());
+      InteractionReference(FigureStore(), MockAnchorSelectionCondition());
   final interactionController = InteractionController(interactionRef);
   final mockPropagator = MockToolPropagator(child: interactionController);
   when(() => mockTool.maxLength).thenReturn(figureMaxLength);

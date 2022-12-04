@@ -15,8 +15,9 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
   late final GestureController _gestureController;
   late final DrawPresenter _drawPresenter;
   final FigureStore _store = FigureStore();
-  final _anchorSelection = AnchorRangeSelection();
-  late final _interactionRef = InteractionReference(_store, _anchorSelection);
+  final _anchorSelectCondition = AnchorYSelectionCondition();
+  late final _interactionRef =
+      InteractionReference(_store, _anchorSelectCondition);
 
   GrapherUserDraw(
       {GestureController? gestureController, DrawPresenter? drawPresenter}) {
@@ -35,7 +36,7 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
     super.draw(viewEvent);
     final coordTranslator = CoordTranslater(viewEvent.xAxis, viewEvent.yAxis);
     _gestureController.updateTranslator(coordTranslator);
-    _anchorSelection.updateCoordTranslater(coordTranslator);
+    _anchorSelectCondition.updateCoordTranslater(coordTranslator);
 
     _gestureController.updateDrawZone(viewEvent.drawZone);
     propagate(viewEvent);
