@@ -1,4 +1,3 @@
-import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
@@ -28,7 +27,4 @@ class CreationInteraction implements UserInteractionInterface {
 
   @override
   void onDrag(VirtualCoord coord) {}
-
-  @override
-  void updateCoordTranslater(CoordTranslater translater) {}
 }

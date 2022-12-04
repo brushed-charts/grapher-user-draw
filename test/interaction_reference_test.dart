@@ -19,7 +19,8 @@ void main() {
   when(() => mockTool.maxLength).thenReturn(figureMaxLength);
 
   setUp(() {
-    interactionRef = InteractionReference(MockFigureStore());
+    interactionRef =
+        InteractionReference(MockFigureStore(), MockAnchorRangeSelection());
   });
 
   test(
@@ -38,16 +39,5 @@ void main() {
     interactionRef.tool = null;
     expect(interactionRef.interface, isInstanceOf<EditionInteraction>());
     expect(interactionRef.tool, isNull);
-  });
-
-  test(
-      "Check that InteractionReference "
-      "update the edition's coordTranslater", () {
-    final mockStore = MockFigureStore();
-    final interactionRef = InteractionReference(mockStore);
-    final mockCoordTranslater = MockCoordTranslator();
-    interactionRef.updateCoordTranslater(mockCoordTranslater);
-    final editionInteraction = interactionRef.interface as EditionInteraction;
-    expect(editionInteraction.coordTranslater, equals(mockCoordTranslater));
   });
 }

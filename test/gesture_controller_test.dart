@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
+import 'package:grapher_user_draw/user_interaction/anchor_range_selection.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
@@ -14,6 +15,8 @@ import 'package:mocktail/mocktail.dart';
 class MockUserInteraction extends Mock implements CreationInteraction {}
 
 class MockCoordTranslator extends Mock implements CoordTranslater {}
+
+class MockAnchorRangeSelection extends Mock implements AnchorRangeSelection {}
 
 void main() {
   TestGestureController().testInterpretationOfTap();
@@ -34,7 +37,7 @@ class TestGestureController {
   TestGestureController() {
     registerFallBacks();
     initMocks();
-    _interactionRef = InteractionReference(_store);
+    _interactionRef = InteractionReference(_store, MockAnchorRangeSelection());
     _interactionRef.interface = _userInteraction;
     _controller = GestureController(
       interactionReference: _interactionRef,

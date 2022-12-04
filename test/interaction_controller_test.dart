@@ -8,6 +8,8 @@ import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_controller.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'gesture_controller_test.dart';
+
 class MockDrawTool extends Mock implements DrawToolInterface {}
 
 class MockToolPropagator extends GraphObject with SinglePropagator {
@@ -23,7 +25,8 @@ void main() {
   const figureMaxLength = 2;
   final mockTool = MockDrawTool();
   final event = DrawToolEvent(mockTool);
-  final interactionRef = InteractionReference(FigureStore());
+  final interactionRef =
+      InteractionReference(FigureStore(), MockAnchorRangeSelection());
   final interactionController = InteractionController(interactionRef);
   final mockPropagator = MockToolPropagator(child: interactionController);
   when(() => mockTool.maxLength).thenReturn(figureMaxLength);
