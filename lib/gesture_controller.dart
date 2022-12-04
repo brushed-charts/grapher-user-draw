@@ -24,19 +24,24 @@ class GestureController extends GraphObject with EndlinePropagator {
 
   void onTapUp(TapUpDetails event) {
     if (_hasMoved) return;
-    if (!_isInDrawZone(event.localPosition)) return;
-    final vCoord = _convertToVirtual(event.localPosition);
+    final vCoord = _tryConvertToVirtual(event.localPosition);
     if (vCoord == null) return;
     _interactorRef.interface.onTap(vCoord);
     setState(this);
   }
 
   void onDrag(DragUpdateDetails event) {
+    _callDragStartOnFirstMove(event);
     _hasMoved = true;
-    if (!_isInDrawZone(event.localPosition)) return;
-    final vCoord = _convertToVirtual(event.localPosition);
+    final vCoord = _tryConvertToVirtual(event.localPosition);
     if (vCoord == null) return;
     _interactorRef.interface.onDrag(vCoord);
+  }
+
+  VirtualCoord? _tryConvertToVirtual(Offset pixelPosition) {
+    if (!_isInDrawZone(pixelPosition)) return null;
+    final vCoord = _convertToVirtual(pixelPosition);
+    return vCoord;
   }
 
   bool _isInDrawZone(Offset position) {
@@ -45,6 +50,13 @@ class GestureController extends GraphObject with EndlinePropagator {
 
   VirtualCoord? _convertToVirtual(Offset position) {
     return _translator?.toVirtual(position);
+  }
+
+  void _callDragStartOnFirstMove(DragUpdateDetails event) {
+    if (_hasMoved) return;
+    final vCoord = _tryConvertToVirtual(event.localPosition);
+    if (vCoord == null) return;
+    _interactorRef.interface.onDragStart(vCoord);
   }
 
   updateTranslator(CoordTranslater translater) => _translator = translater;

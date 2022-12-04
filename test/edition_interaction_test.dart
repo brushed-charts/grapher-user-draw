@@ -14,37 +14,56 @@ class MockVirtualAxis extends Mock implements VirtualAxis {}
 class MockCoordTranslator extends Mock implements CoordTranslater {}
 
 void main() {
+  final mockStore = MockStore();
+  final mockSelectionCondition = MockAnchorSelectionCondition();
+
+  final randomPickedDate = DateTime(2022, 12, 04);
+  const double randomMockValue1 = 1.7796;
+  const double randomMockValue2 = 1.8796;
+  const double randomMockValue3 = 1.8756;
+  final pointerPosition = VirtualCoord(randomPickedDate, randomMockValue3);
+
+  final anchorA = Anchor(x: randomPickedDate, y: randomMockValue1);
+  final anchorB = Anchor(x: randomPickedDate, y: randomMockValue2);
+  final edition = EditionInteraction(mockStore, mockSelectionCondition);
+
+  when(() => mockStore.getByDatetime(any())).thenReturn([anchorA, anchorB]);
+  checkAnchorA() => mockSelectionCondition.isCloseToPointer(any(), anchorA.y);
+  checkAnchorB() => mockSelectionCondition.isCloseToPointer(any(), anchorB.y);
+  when(checkAnchorA).thenReturn(false);
+  when(checkAnchorB).thenReturn(false);
+
   group("Test selectedAnchor when anchor selection condition", () {
-    final mockStore = MockStore();
-    final mockSelectionCondition = MockAnchorSelectionCondition();
+    test("is matched for one anchor during Tap and drag", () {
+      when(checkAnchorA).thenReturn(false);
+      when(checkAnchorB).thenReturn(true);
 
-    final randomPickedDate = DateTime(2022, 12, 04);
-    const double randomMockValue1 = 1.7796;
-    const double randomMockValue2 = 1.8796;
-    const double randomMockValue3 = 1.8756;
+      edition.onTap(pointerPosition);
+      expect(edition.anchorSelected, equals(anchorB));
 
-    final anchorA = Anchor(x: randomPickedDate, y: randomMockValue1);
-    final anchorB = Anchor(x: randomPickedDate, y: randomMockValue2);
-    final edition = EditionInteraction(mockStore, mockSelectionCondition);
-
-    when(() => mockStore.getByDatetime(any())).thenReturn([anchorA, anchorB]);
-    selectionA() => mockSelectionCondition.isCloseToPointer(any(), anchorA.y);
-    selectionB() => mockSelectionCondition.isCloseToPointer(any(), anchorB.y);
-
-    test("is matched for one anchor", () {
-      when(selectionA).thenReturn(false);
-      when(selectionB).thenReturn(true);
-
-      edition.onTap(VirtualCoord(randomPickedDate, randomMockValue3));
+      edition.onDragStart(pointerPosition);
       expect(edition.anchorSelected, equals(anchorB));
     });
 
-    test("match with no anchor", () {
-      when(selectionA).thenReturn(false);
-      when(selectionB).thenReturn(false);
+    test("match with no anchor during Tap and drag", () {
+      when(checkAnchorA).thenReturn(false);
+      when(checkAnchorB).thenReturn(false);
 
-      edition.onTap(VirtualCoord(randomPickedDate, randomMockValue3));
+      edition.onTap(pointerPosition);
       expect(edition.anchorSelected, isNull);
+
+      edition.onDragStart(pointerPosition);
+      expect(edition.anchorSelected, equals(isNull));
     });
+  });
+
+  test("During drag assert selected anchor moved to the target ", () {
+    when(checkAnchorB).thenReturn(true);
+    final finalPointerPosition = VirtualCoord(DateTime(2022, 12, 05), 12.896);
+    edition.onDragStart(pointerPosition);
+    edition.onDrag(finalPointerPosition);
+    expect(edition.anchorSelected, isNotNull);
+    expect(edition.anchorSelected!.x, equals(finalPointerPosition.x));
+    expect(edition.anchorSelected!.y, equals(finalPointerPosition.y));
   });
 }

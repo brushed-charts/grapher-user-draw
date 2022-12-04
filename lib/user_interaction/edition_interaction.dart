@@ -14,16 +14,29 @@ class EditionInteraction implements UserInteractionInterface {
 
   @override
   void onTap(VirtualCoord coord) {
-    final matchingAnchors = _store.getByDatetime(coord.x);
+    _updateAnchorSelected(coord);
+  }
+
+  void _updateAnchorSelected(VirtualCoord pointerCoord) {
     _anchorSelected = null;
+    final matchingAnchors = _store.getByDatetime(pointerCoord.x);
     for (final anchor in matchingAnchors) {
-      if (!_anchorSelectCondition.isCloseToPointer(coord.y, anchor.y)) continue;
-      _anchorSelected = anchor;
+      if (_anchorSelectCondition.isCloseToPointer(pointerCoord.y, anchor.y)) {
+        _anchorSelected = anchor;
+      }
     }
   }
 
   @override
-  void onDrag(VirtualCoord coord) {}
+  void onDrag(VirtualCoord coord) {
+    final movedAnchor = Anchor(x: coord.x, y: coord.y);
+    _anchorSelected = movedAnchor;
+  }
 
   Anchor? get anchorSelected => _anchorSelected;
+
+  @override
+  void onDragStart(VirtualCoord coord) {
+    _updateAnchorSelected(coord);
+  }
 }

@@ -27,4 +27,7 @@ class CreationInteraction implements UserInteractionInterface {
 
   @override
   void onDrag(VirtualCoord coord) {}
+
+  @override
+  void onDragStart(VirtualCoord coord) {}
 }

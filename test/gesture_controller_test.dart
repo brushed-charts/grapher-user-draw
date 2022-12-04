@@ -9,6 +9,7 @@ import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.da
 import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
+import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -24,11 +25,12 @@ void main() {
   TestGestureController().testDragInterpreter();
   TestGestureController().testThereIsNoCallWhenVCoordIsNull();
   TestGestureController().expectPointerOutOfDrawZoneIsIgnored();
+  TestGestureController().assertDragStartIsCalledBeforeDrag();
 }
 
 class TestGestureController {
   late final GestureController _controller;
-  late final CreationInteraction _userInteraction;
+  late final UserInteractionInterface _userInteraction;
   late final InteractionReference _interactionRef;
   late final CoordTranslater _coordTranslator;
   final _store = FigureStore();
@@ -128,6 +130,18 @@ class TestGestureController {
         ));
         verifyNever(() => _userInteraction.onTap(any()));
       });
+    });
+  }
+
+  void assertDragStartIsCalledBeforeDrag() {
+    test(
+        "Check whether interaction DragStart()"
+        "is called one time before drag", () {
+      simulateDrag();
+      dragStartFunction() => _userInteraction.onDragStart(captureAny());
+      final callResult = verify(dragStartFunction);
+      callResult.called(1);
+      expect(callResult.captured[0], isInstanceOf<VirtualCoord>());
     });
   }
 
