@@ -99,6 +99,23 @@ void main() {
       expect(figureLength4.getByDatetime(searchDate), equals([]));
     });
   });
+
+  group("In Figure, assert anchor replacement", () {
+    test("is done when Anchor to replace exist", () {
+      figureLength2.add(anchorA);
+      figureLength2.replace(anchorA, anchorB);
+      expect(figureLength2.contains(anchorA), isFalse);
+      expect(figureLength2.contains(anchorB), isTrue);
+    });
+
+    test("do nothing when anchor to replace do not exist", () {
+      figureLength2.add(anchorC);
+      figureLength2.replace(anchorA, anchorB);
+      expect(figureLength2.contains(anchorA), isFalse);
+      expect(figureLength2.contains(anchorB), isFalse);
+      expect(figureLength2.contains(anchorC), isTrue);
+    });
+  });
 }
 
 void addAnchorsToFigure(int anchorCount, Figure figure) {

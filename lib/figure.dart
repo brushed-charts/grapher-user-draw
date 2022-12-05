@@ -31,4 +31,10 @@ class Figure {
   List<Anchor> getByDatetime(DateTime date) {
     return _anchors.where((anchor) => anchor.x == date).toList();
   }
+
+  void replace(Anchor anchorToReplace, Anchor newAnchor) {
+    final targetIndex = _anchors.indexOf(anchorToReplace);
+    if (targetIndex == -1) return;
+    _anchors[targetIndex] = newAnchor;
+  }
 }
