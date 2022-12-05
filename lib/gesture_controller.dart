@@ -36,6 +36,7 @@ class GestureController extends GraphObject with EndlinePropagator {
     final vCoord = _tryConvertToVirtual(event.localPosition);
     if (vCoord == null) return;
     _interactorRef.interface.onDrag(vCoord);
+    setState(this);
   }
 
   VirtualCoord? _tryConvertToVirtual(Offset pixelPosition) {

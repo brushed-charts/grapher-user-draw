@@ -21,12 +21,25 @@ import 'package:grapher/view/window.dart';
 import 'package:flutter/material.dart';
 import 'package:grapher/pointer/widget.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
+import 'package:grapher_user_draw/example/draw_tool_tester.dart';
 import 'package:grapher_user_draw/example/fake_tool_propagator.dart';
 
 import 'json.dart';
 
+final fakeToolPropagator = FakeToolPropagator();
+var isCreatingMode = true;
+
 main(List<String> args) async {
   runApp(const App());
+}
+
+void onCreation() {
+  if (isCreatingMode) {
+    fakeToolPropagator.propagateDrawTool(null);
+  } else {
+    fakeToolPropagator.propagateDrawTool(DrawToolTester());
+  }
+  isCreatingMode = !isCreatingMode;
 }
 
 Stream<Map> streamer(Map json) async* {
@@ -39,11 +52,20 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final graph = createGraph();
+    fakeToolPropagator.propagateDrawTool(DrawToolTester());
     return MaterialApp(
       theme: getThemeData(),
       home: Scaffold(
         body: Column(
           children: [
+            IconButton(
+              iconSize: 32,
+              icon: const Icon(Icons.edit),
+              color: isCreatingMode == true
+                  ? Colors.deepPurpleAccent
+                  : Colors.grey,
+              onPressed: onCreation,
+            ),
             Expanded(
               child: GraphPointer(kernel: graph),
             )
@@ -91,7 +113,7 @@ class App extends StatelessWidget {
                                 child: PipeIn(
                                     name: 'pipe_cell',
                                     eventType: CellEvent)))))),
-            FakeToolPropagator(child: GrapherUserDraw())
+            fakeToolPropagator.chainUp(child: GrapherUserDraw())
           ]))))),
     ]));
   }
