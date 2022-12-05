@@ -30,6 +30,7 @@ void main() {
   final interactionController = InteractionController(interactionRef);
   final mockPropagator = MockToolPropagator(child: interactionController);
   when(() => mockTool.maxLength).thenReturn(figureMaxLength);
+
   test('Expect interaction controller to update interaction reference', () {
     mockPropagator.propagateToolEvent(event);
     expect(interactionRef.tool, equals(mockTool));

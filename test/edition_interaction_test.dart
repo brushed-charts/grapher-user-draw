@@ -26,6 +26,7 @@ void main() {
   const double randomMockValue2 = 1.8796;
   const double randomMockValue3 = 1.8756;
   final pointerPosition = VirtualCoord(randomPickedDate, randomMockValue3);
+  final dragEndPosition = VirtualCoord(DateTime(2022, 12, 05), 12.896);
 
   final anchorA = Anchor(x: randomPickedDate, y: randomMockValue1);
   final anchorB = Anchor(x: randomPickedDate, y: randomMockValue2);
@@ -54,7 +55,6 @@ void main() {
 
       edition.onTap(pointerPosition);
       expect(edition.anchorSelected, equals(anchorB));
-
       edition.onDragStart(pointerPosition);
       expect(edition.anchorSelected, equals(anchorB));
     });
@@ -65,7 +65,6 @@ void main() {
 
       edition.onTap(pointerPosition);
       expect(edition.anchorSelected, isNull);
-
       edition.onDragStart(pointerPosition);
       expect(edition.anchorSelected, equals(isNull));
     });
@@ -74,20 +73,17 @@ void main() {
   group("During drag, assert stored and selected anchor", () {
     test("moved to the target", () {
       when(checkAnchorBForSelection).thenReturn(true);
-      final finalPointerPosition = VirtualCoord(DateTime(2022, 12, 05), 12.896);
-      final targetAnchor =
-          Anchor(x: finalPointerPosition.x, y: finalPointerPosition.y);
+      final targetAnchor = Anchor(x: dragEndPosition.x, y: dragEndPosition.y);
       edition.onDragStart(pointerPosition);
-      edition.onDrag(finalPointerPosition);
+      edition.onDrag(dragEndPosition);
       expect(edition.anchorSelected, isNotNull);
-      expect(edition.anchorSelected!.x, equals(finalPointerPosition.x));
-      expect(edition.anchorSelected!.y, equals(finalPointerPosition.y));
+      expect(edition.anchorSelected!.x, equals(dragEndPosition.x));
+      expect(edition.anchorSelected!.y, equals(dragEndPosition.y));
       verify(() => mockFigure.replace(anchorB, targetAnchor)).called(1);
     });
     test("do nothing if there is no anchor selected at first", () {
-      final finalPointerPosition = VirtualCoord(DateTime(2022, 12, 05), 12.896);
       edition.onDragStart(pointerPosition);
-      edition.onDrag(finalPointerPosition);
+      edition.onDrag(dragEndPosition);
       expect(edition.anchorSelected, isNull);
       verifyNever(() => mockFigure.replace(any(), any()));
     });

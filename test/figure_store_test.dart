@@ -11,8 +11,15 @@ class MockFigure extends Mock implements Figure {
 }
 
 void main() {
+  late FigureStore store;
+  late List<Figure> figurePopulation;
+
+  setUp(() {
+    store = FigureStore();
+    figurePopulation = generateFigures(4);
+  });
+
   test('Test figures can be added to the store and retrieved by ID', () {
-    final store = FigureStore();
     final expectedFigure = Figure(1);
     store.upsert(expectedFigure);
     final retrievedFigure = store.getByID(expectedFigure.groupID);
@@ -20,17 +27,13 @@ void main() {
   });
 
   test('Test retrieving all Figure from the store', () {
-    final store = FigureStore();
-    final figureList = generateFigures(5);
-    addFiguresToStore(store, figureList);
-    expect(store.getAll(), equals(figureList));
+    addFiguresToStore(store, figurePopulation);
+    expect(store.getAll(), equals(figurePopulation));
   });
 
   test('Test Figure store length function return the right result', () {
-    const expectedLength = 5;
-    final store = FigureStore();
-    final figureList = generateFigures(5);
-    addFiguresToStore(store, figureList);
+    const expectedLength = 4;
+    addFiguresToStore(store, figurePopulation);
     expect(store.length, equals(expectedLength));
   });
 
@@ -42,49 +45,38 @@ void main() {
     final anchorC = Anchor(x: searchDate, y: 2356);
     final anchorB = Anchor(x: wrongDate, y: 906);
 
-    final figures = generateFigures(4);
-    figures[0].add(anchorA);
-    figures[1].add(anchorB);
-    figures[2].add(anchorC);
-
-    final store = FigureStore();
-    addFiguresToStore(store, figures);
+    figurePopulation[0].add(anchorA);
+    figurePopulation[1].add(anchorB);
+    figurePopulation[2].add(anchorC);
+    addFiguresToStore(store, figurePopulation);
 
     expect(store.getByDatetime(searchDate), equals([anchorA, anchorC]));
   });
 
   group("Inside FigureStore using an anchor reference assert", () {
+    final anchorReference = Anchor(x: DateTime(2022, 12, 05), y: 1.3245);
     test("figure can be retrieved when it contains the reference", () {
-      final store = FigureStore();
-      final figurePopulation = generateFigures(3);
-      final refAnchor = Anchor(x: DateTime(2022, 12, 05), y: 1.3245);
       final expectedFigure = figurePopulation[1];
-      figurePopulation[1].add(refAnchor);
+      figurePopulation[1].add(anchorReference);
       addFiguresToStore(store, figurePopulation);
-      final retrievedFigure = store.getByAnchor(refAnchor);
+      final retrievedFigure = store.getByAnchor(anchorReference);
 
       expect(retrievedFigure, equals(expectedFigure));
     });
     test("resulting figure is null when their is no matching anchor", () {
-      final store = FigureStore();
-      final figurePopulation = generateFigures(3);
-      final refAnchor = Anchor(x: DateTime(2022, 12, 05), y: 1.3245);
       addFiguresToStore(store, figurePopulation);
-      final retrievedFigure = store.getByAnchor(refAnchor);
+      final retrievedFigure = store.getByAnchor(anchorReference);
 
       expect(retrievedFigure, isNull);
     });
     test(
         "only the first matching figure is output when "
         "the reference appear in many figures", () {
-      final store = FigureStore();
-      final figurePopulation = generateFigures(3);
-      final refAnchor = Anchor(x: DateTime(2022, 12, 05), y: 1.3245);
       final expectedFigure = figurePopulation[0];
-      figurePopulation[0].add(refAnchor);
-      figurePopulation[2].add(refAnchor);
+      figurePopulation[0].add(anchorReference);
+      figurePopulation[2].add(anchorReference);
       addFiguresToStore(store, figurePopulation);
-      final retrievedFigure = store.getByAnchor(refAnchor);
+      final retrievedFigure = store.getByAnchor(anchorReference);
 
       expect(retrievedFigure, equals(expectedFigure));
     });

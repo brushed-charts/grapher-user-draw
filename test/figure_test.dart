@@ -52,51 +52,46 @@ void main() {
   });
 
   group('Inside Figure assert anchor is', () {
+    final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
     test('present after added it', () {
-      final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
       figureLength2.add(anchorA);
       figureLength2.add(anchorB);
       expect(figureLength2.contains(anchorB), isTrue);
     });
     test('not present when anchors are differents', () {
-      final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
       figureLength2.add(anchorA);
       expect(figureLength2.contains(anchorB), isFalse);
     });
     test('not present when nothing was added', () {
-      final anchorB = Anchor(x: DateTime(2022, 11, 19, 10), y: 757);
       expect(figureLength2.contains(anchorB), isFalse);
     });
     test('present although objects are differents but with the same value', () {
-      final anchorB = Anchor(x: DateTime(2022, 11, 19, 19), y: 7857);
+      final anchorB = Anchor(x: anchorA.x, y: anchorA.y);
       figureLength2.add(anchorA);
       expect(figureLength2.contains(anchorB), isTrue);
     });
   });
 
   test("Assert getAll() function of figure return the anchor list", () {
-    final expectedMockAnchor1 = MockAnchor();
-    final expectedMockAnchor2 = MockAnchor();
-    figureLength2.add(expectedMockAnchor1);
-    figureLength2.add(expectedMockAnchor2);
-    expect(figureLength2.getAll(),
-        equals([expectedMockAnchor1, expectedMockAnchor2]));
+    figureLength2.add(anchorA);
+    figureLength2.add(anchorB);
+    expect(figureLength2.getAll(), equals([anchorA, anchorB]));
   });
 
   group("Check Figure getByDatetime() returned anchor", () {
     test('when anchors is present', () {
-      final searchDate = DateTime(2022, 11, 19, 19);
+      final searchDateMatchingAnchor = DateTime(2022, 11, 19, 19);
       figureLength4.add(anchorA);
       figureLength4.add(anchorB);
       figureLength4.add(anchorC);
-      expect(
-          figureLength4.getByDatetime(searchDate), equals([anchorA, anchorC]));
+      expect(figureLength4.getByDatetime(searchDateMatchingAnchor),
+          equals([anchorA, anchorC]));
     });
     test("when no anchor match", () {
-      final searchDate = DateTime(2022, 12, 04, 00, 54);
+      final dateWithoutOccurence = DateTime(2022, 12, 04, 00, 54);
       figureLength4.add(anchorA);
       figureLength4.add(anchorB);
-      expect(figureLength4.getByDatetime(searchDate), equals([]));
+      expect(figureLength4.getByDatetime(dateWithoutOccurence), equals([]));
     });
   });
 
