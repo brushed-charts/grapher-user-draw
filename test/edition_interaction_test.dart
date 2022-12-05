@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/view/axis/virtual-axis.dart';
 import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
+import 'package:grapher_user_draw/figure.dart';
 import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
@@ -13,8 +14,11 @@ class MockVirtualAxis extends Mock implements VirtualAxis {}
 
 class MockCoordTranslator extends Mock implements CoordTranslater {}
 
+class MockFigure extends Mock implements Figure {}
+
 void main() {
   final mockStore = MockStore();
+  final mockFigure = MockFigure();
   final mockSelectionCondition = MockAnchorSelectionCondition();
 
   final randomPickedDate = DateTime(2022, 12, 04);
@@ -27,16 +31,26 @@ void main() {
   final anchorB = Anchor(x: randomPickedDate, y: randomMockValue2);
   final edition = EditionInteraction(mockStore, mockSelectionCondition);
 
-  when(() => mockStore.getByDatetime(any())).thenReturn([anchorA, anchorB]);
-  checkAnchorA() => mockSelectionCondition.isCloseToPointer(any(), anchorA.y);
-  checkAnchorB() => mockSelectionCondition.isCloseToPointer(any(), anchorB.y);
-  when(checkAnchorA).thenReturn(false);
-  when(checkAnchorB).thenReturn(false);
+  registerFallbackValue(Anchor(x: DateTime.now(), y: 0));
+  late Function() checkAnchorAForSelection;
+  late Function() checkAnchorBForSelection;
+
+  setUp(() {
+    checkAnchorAForSelection =
+        () => mockSelectionCondition.isCloseToPointer(any(), anchorA.y);
+    checkAnchorBForSelection =
+        () => mockSelectionCondition.isCloseToPointer(any(), anchorB.y);
+
+    when(() => mockStore.getByDatetime(any())).thenReturn([anchorA, anchorB]);
+    when(checkAnchorAForSelection).thenReturn(false);
+    when(checkAnchorBForSelection).thenReturn(false);
+    when(() => mockStore.getByAnchor(any())).thenReturn(mockFigure);
+  });
 
   group("Test selectedAnchor when anchor selection condition", () {
     test("is matched for one anchor during Tap and drag", () {
-      when(checkAnchorA).thenReturn(false);
-      when(checkAnchorB).thenReturn(true);
+      when(checkAnchorAForSelection).thenReturn(false);
+      when(checkAnchorBForSelection).thenReturn(true);
 
       edition.onTap(pointerPosition);
       expect(edition.anchorSelected, equals(anchorB));
@@ -46,8 +60,8 @@ void main() {
     });
 
     test("match with no anchor during Tap and drag", () {
-      when(checkAnchorA).thenReturn(false);
-      when(checkAnchorB).thenReturn(false);
+      when(checkAnchorAForSelection).thenReturn(false);
+      when(checkAnchorBForSelection).thenReturn(false);
 
       edition.onTap(pointerPosition);
       expect(edition.anchorSelected, isNull);
@@ -57,13 +71,25 @@ void main() {
     });
   });
 
-  test("During drag assert selected anchor moved to the target ", () {
-    when(checkAnchorB).thenReturn(true);
-    final finalPointerPosition = VirtualCoord(DateTime(2022, 12, 05), 12.896);
-    edition.onDragStart(pointerPosition);
-    edition.onDrag(finalPointerPosition);
-    expect(edition.anchorSelected, isNotNull);
-    expect(edition.anchorSelected!.x, equals(finalPointerPosition.x));
-    expect(edition.anchorSelected!.y, equals(finalPointerPosition.y));
+  group("During drag, assert stored and selected anchor", () {
+    test("moved to the target", () {
+      when(checkAnchorBForSelection).thenReturn(true);
+      final finalPointerPosition = VirtualCoord(DateTime(2022, 12, 05), 12.896);
+      final targetAnchor =
+          Anchor(x: finalPointerPosition.x, y: finalPointerPosition.y);
+      edition.onDragStart(pointerPosition);
+      edition.onDrag(finalPointerPosition);
+      expect(edition.anchorSelected, isNotNull);
+      expect(edition.anchorSelected!.x, equals(finalPointerPosition.x));
+      expect(edition.anchorSelected!.y, equals(finalPointerPosition.y));
+      verify(() => mockFigure.replace(anchorB, targetAnchor)).called(1);
+    });
+    test("do nothing if there is no anchor selected at first", () {
+      final finalPointerPosition = VirtualCoord(DateTime(2022, 12, 05), 12.896);
+      edition.onDragStart(pointerPosition);
+      edition.onDrag(finalPointerPosition);
+      expect(edition.anchorSelected, isNull);
+      verifyNever(() => mockFigure.replace(any(), any()));
+    });
   });
 }

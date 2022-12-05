@@ -29,7 +29,10 @@ class EditionInteraction implements UserInteractionInterface {
 
   @override
   void onDrag(VirtualCoord coord) {
+    if (anchorSelected == null) return;
     final movedAnchor = Anchor(x: coord.x, y: coord.y);
+    final retrievedFigure = _store.getByAnchor(anchorSelected!);
+    retrievedFigure!.replace(anchorSelected!, movedAnchor);
     _anchorSelected = movedAnchor;
   }
 
