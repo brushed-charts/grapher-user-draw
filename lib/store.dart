@@ -27,4 +27,17 @@ class FigureStore {
     }
     return concatedAnchors;
   }
+
+  Figure? getByAnchor(Anchor reference) {
+    final figureList = getAll();
+    Figure? matchingFigure;
+    try {
+      matchingFigure =
+          figureList.firstWhere((figure) => figure.contains(reference));
+    } catch (e) {
+      matchingFigure = null;
+    }
+
+    return matchingFigure;
+  }
 }
