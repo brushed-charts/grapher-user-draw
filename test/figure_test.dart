@@ -1,9 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher_user_draw/anchor.dart';
+import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/figure.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAnchor extends Mock implements Anchor {}
+
+class MockDrawTool extends Mock implements DrawToolInterface {
+  @override
+  final int maxLength;
+  MockDrawTool(this.maxLength);
+}
 
 void main() {
   const fiveAnchorsCount = 5;
@@ -13,15 +20,15 @@ void main() {
   final anchorC = Anchor(x: DateTime(2022, 11, 19, 19), y: 893);
 
   setUp(() {
-    figureLength2 = Figure(2);
-    figureLength4 = Figure(4);
-    figureLength5 = Figure(5);
+    figureLength2 = Figure(MockDrawTool(2));
+    figureLength4 = Figure(MockDrawTool(4));
+    figureLength5 = Figure(MockDrawTool(5));
   });
 
   test("Assert Figure can't have a less than one anchor", () {
-    expect(() => Figure(0), throwsArgumentError);
-    expect(() => Figure(-1), throwsArgumentError);
-    expect(() => Figure(1), returnsNormally);
+    expect(() => Figure(MockDrawTool(0)), throwsArgumentError);
+    expect(() => Figure(MockDrawTool(-1)), throwsArgumentError);
+    expect(() => Figure(MockDrawTool(1)), returnsNormally);
   });
 
   group('Test adding anchor intto the figure', () {

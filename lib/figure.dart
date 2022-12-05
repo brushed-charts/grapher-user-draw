@@ -1,14 +1,17 @@
+import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
+
 import 'anchor.dart';
 import 'misc.dart';
 
 class Figure {
   final groupID = Misc.generateUniqueID();
   final _anchors = <Anchor>[];
-  final int maxLength;
+  final DrawToolInterface tool;
+  int get maxLength => tool.maxLength;
   int get length => _anchors.length;
   bool contains(Anchor anchor) => _anchors.contains(anchor);
 
-  Figure(this.maxLength) {
+  Figure(this.tool) {
     if (maxLength <= 0) {
       throw ArgumentError("Figure can't have a max length less that 1");
     }

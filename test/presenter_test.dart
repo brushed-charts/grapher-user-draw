@@ -17,7 +17,7 @@ import 'package:grapher_user_draw/presenter.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockDrawTool extends Mock implements DrawToolInterface {}
+import 'creation_interaction_test.dart';
 
 class MockFigure extends Mock implements Figure {}
 
@@ -58,11 +58,11 @@ void main() {
   late Function() toolDraw;
 
   when(() => mockStore.length).thenReturn(3);
-  registerFallbackValue(Figure(1));
+  registerFallbackValue(Figure(MockDrawTool(1)));
   registerFallbackValue(DrawInfo(viewEvent));
 
   setUp(() {
-    mockTool = MockDrawTool();
+    mockTool = MockDrawTool(1);
     presenter = DrawPresenter(mockStore);
     toolDraw = () => mockTool.draw(captureAny(), captureAny());
   });

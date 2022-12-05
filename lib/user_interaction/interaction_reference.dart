@@ -23,7 +23,7 @@ class InteractionReference extends Viewable with EndlinePropagator {
       interface = EditionInteraction(_store, _anchorSelectCondition);
       return;
     }
-    interface = CreationInteraction(tool.maxLength, _store);
+    interface = CreationInteraction(tool, _store);
   }
 
   set tool(DrawToolInterface? tool) => _updateTool(tool);

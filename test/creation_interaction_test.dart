@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher_user_draw/anchor.dart';
+import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/figure.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
@@ -8,19 +9,26 @@ import 'package:mocktail/mocktail.dart';
 
 class MockFigureStore extends Mock implements FigureStore {}
 
+class MockDrawTool extends Mock implements DrawToolInterface {
+  @override
+  final int maxLength;
+  MockDrawTool(this.maxLength);
+}
+
 void main() {
-  registerFallbackValue(Figure(1));
+  registerFallbackValue(Figure(MockDrawTool(1)));
   final tapPosA = VirtualCoord(DateTime(2022, 11, 19), 1052);
   final tapPosB = VirtualCoord(DateTime(2022, 11, 18), 2052);
   final anchorA = Anchor(x: tapPosA.x, y: tapPosA.y);
   final anchorB = Anchor(x: tapPosB.x, y: tapPosB.y);
+  final mockDrawTool = MockDrawTool(2);
   late FigureStore mockStore;
   late CreationInteraction userInteraction;
   late Function() storeAdd;
 
   setUp(() {
     mockStore = MockFigureStore();
-    userInteraction = CreationInteraction(2, mockStore);
+    userInteraction = CreationInteraction(mockDrawTool, mockStore);
     storeAdd = () => mockStore.upsert(captureAny());
   });
 

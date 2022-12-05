@@ -4,6 +4,8 @@ import 'package:grapher_user_draw/figure.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'creation_interaction_test.dart';
+
 class MockFigure extends Mock implements Figure {
   @override
   final int groupID;
@@ -20,7 +22,7 @@ void main() {
   });
 
   test('Test figures can be added to the store and retrieved by ID', () {
-    final expectedFigure = Figure(1);
+    final expectedFigure = Figure(MockDrawTool(1));
     store.upsert(expectedFigure);
     final retrievedFigure = store.getByID(expectedFigure.groupID);
     expect(retrievedFigure, equals(expectedFigure));
@@ -93,7 +95,7 @@ List<Figure> generateFigures(int count) {
   const aRandomPickedCount = 3;
   final figList = <Figure>[];
   for (int i = 0; i < count; i++) {
-    figList.add(Figure(aRandomPickedCount));
+    figList.add(Figure(MockDrawTool(aRandomPickedCount)));
   }
   return figList;
 }
