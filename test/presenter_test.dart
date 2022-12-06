@@ -19,7 +19,11 @@ import 'package:mocktail/mocktail.dart';
 
 import 'creation_interaction_test.dart';
 
-class MockFigure extends Mock implements Figure {}
+class MockFigure extends Mock implements Figure {
+  @override
+  final DrawToolInterface tool;
+  MockFigure(this.tool);
+}
 
 class MockCanvas extends Mock implements Canvas {}
 
@@ -30,16 +34,6 @@ class MockVirtualAxis extends Mock implements VirtualAxis {}
 class MockDrawInfo extends Mock implements DrawInfo {}
 
 class MockStore extends Mock implements FigureStore {}
-
-class MockPropagator extends GraphObject with SinglePropagator {
-  MockPropagator(GraphObject child) {
-    this.child = child;
-  }
-
-  void propagateToolEvent(DrawToolEvent event) {
-    propagate(event);
-  }
-}
 
 void main() {
   final Canvas mockCanvas = MockCanvas();
@@ -52,7 +46,8 @@ void main() {
     MockVirtualAxis(),
     <Data2D?>[],
   );
-  final Figure mockFigure = MockFigure();
+  late Figure mockFigureA;
+  late Figure mockFigureB;
   late DrawToolInterface mockTool;
   late DrawPresenter presenter;
   late Function() toolDraw;
@@ -65,11 +60,12 @@ void main() {
     mockTool = MockDrawTool(1);
     presenter = DrawPresenter(mockStore);
     toolDraw = () => mockTool.draw(captureAny(), captureAny());
+    mockFigureA = MockFigure(mockTool);
+    mockFigureB = MockFigure(mockTool);
   });
 
   test("Assert tool's draw function is called on presenter draw", () {
-    MockPropagator(presenter).propagate(DrawToolEvent(mockTool));
-    when(() => mockStore.getAll()).thenReturn([mockFigure, MockFigure()]);
+    when(() => mockStore.getAll()).thenReturn([mockFigureA, mockFigureB]);
     presenter.draw(viewEvent);
 
     final toolDrawCallResult = verify(toolDraw);
@@ -79,6 +75,6 @@ void main() {
     toolDrawCallResult.called(2);
     expect(captureDrawInfo.canvas, equals(mockCanvas));
     expect(captureDrawInfo.event, equals(viewEvent));
-    expect(capturedParams[1], equals(mockFigure));
+    expect(capturedParams[1], equals(mockFigureA));
   });
 }

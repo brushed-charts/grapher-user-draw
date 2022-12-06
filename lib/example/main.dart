@@ -13,6 +13,8 @@ import 'package:grapher/pack/pack.dart';
 import 'package:grapher/pack/unpack-view.dart';
 import 'package:grapher/pipe/pipeIn.dart';
 import 'package:grapher/pipe/pipeOut.dart';
+import 'package:grapher/reference/main.dart';
+import 'package:grapher/reference/memory_repository.dart';
 import 'package:grapher/staticLayout/stack.dart';
 import 'package:grapher/tag/tag.dart';
 import 'package:grapher/utils/merge.dart';
@@ -20,6 +22,7 @@ import 'package:grapher/view/window.dart';
 
 import 'package:flutter/material.dart';
 import 'package:grapher/pointer/widget.dart';
+import 'package:grapher_user_draw/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
 import 'package:grapher_user_draw/example/draw_tool_tester.dart';
 import 'package:grapher_user_draw/example/fake_tool_propagator.dart';
@@ -27,19 +30,11 @@ import 'package:grapher_user_draw/example/fake_tool_propagator.dart';
 import 'json.dart';
 
 final fakeToolPropagator = FakeToolPropagator();
+final referenceRepository = ReferenceRepositoryInMemory();
 var isCreatingMode = true;
 
 main(List<String> args) async {
   runApp(const App());
-}
-
-void onCreation() {
-  if (isCreatingMode) {
-    fakeToolPropagator.propagateDrawTool(null);
-  } else {
-    fakeToolPropagator.propagateDrawTool(DrawToolTester());
-  }
-  isCreatingMode = !isCreatingMode;
 }
 
 Stream<Map> streamer(Map json) async* {
@@ -48,6 +43,24 @@ Stream<Map> streamer(Map json) async* {
 
 class App extends StatelessWidget {
   const App({super.key});
+  void onCreation() {
+    if (isCreatingMode) {
+      fakeToolPropagator.propagateDrawTool(null);
+    } else {
+      fakeToolPropagator.propagateDrawTool(DrawToolTester());
+    }
+    isCreatingMode = !isCreatingMode;
+  }
+
+  void onBypass() {
+    final bypass =
+        referenceRepository.access<PointerEventBypassChild>('pointer_bypass')!;
+    if (bypass.isEnabled) {
+      bypass.disable();
+    } else {
+      bypass.enable();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +71,27 @@ class App extends StatelessWidget {
       home: Scaffold(
         body: Column(
           children: [
-            IconButton(
-              iconSize: 32,
-              icon: const Icon(Icons.edit),
-              color: isCreatingMode == true
-                  ? Colors.deepPurpleAccent
-                  : Colors.grey,
-              onPressed: onCreation,
+            Row(
+              children: [
+                IconButton(
+                  iconSize: 32,
+                  icon: const Icon(Icons.edit),
+                  color: isCreatingMode == true
+                      ? Colors.deepPurpleAccent
+                      : Colors.grey,
+                  onPressed: onCreation,
+                ),
+                IconButton(
+                  iconSize: 32,
+                  icon: const Icon(Icons.switch_access_shortcut),
+                  color: referenceRepository
+                          .access<PointerEventBypassChild>('pointer_bypass')!
+                          .isEnabled
+                      ? Colors.deepPurpleAccent
+                      : Colors.grey,
+                  onPressed: onBypass,
+                ),
+              ],
             ),
             Expanded(
               child: GraphPointer(kernel: graph),
@@ -102,19 +129,24 @@ class App extends StatelessWidget {
           name: 'pipe_main',
           child: Pack(
               child: SortAccumulation(
-                  child: Window(
-                      child: StackLayout(children: [
-            UnpackFromViewEvent(
-                tagName: 'oanda',
-                child: DrawUnitFactory(
-                    template: DrawUnit.template(
-                        child: Candlestick(
-                            child: MergeBranches(
-                                child: PipeIn(
-                                    name: 'pipe_cell',
-                                    eventType: CellEvent)))))),
-            fakeToolPropagator.chainUp(child: GrapherUserDraw())
-          ]))))),
+                  child: PointerEventBypassChild(
+                      child: Reference(
+                          name: "pointer_bypass",
+                          repository: referenceRepository,
+                          child: PointerEventBypassChild(
+                              child: Window(
+                                  child: StackLayout(children: [
+                            UnpackFromViewEvent(
+                                tagName: 'oanda',
+                                child: DrawUnitFactory(
+                                    template: DrawUnit.template(
+                                        child: Candlestick(
+                                            child: MergeBranches(
+                                                child: PipeIn(
+                                                    name: 'pipe_cell',
+                                                    eventType: CellEvent)))))),
+                            fakeToolPropagator.chainUp(child: GrapherUserDraw())
+                          ])))))))),
     ]));
   }
 }
