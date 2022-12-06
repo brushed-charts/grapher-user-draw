@@ -22,7 +22,6 @@ class MockAnchorSelectionCondition extends Mock
 
 void main() {
   TestGestureController().testInterpretationOfTap();
-  TestGestureController().testDragInterpreter();
   TestGestureController().testThereIsNoCallWhenVCoordIsNull();
   TestGestureController().expectPointerOutOfDrawZoneIsIgnored();
   TestGestureController().assertDragStartIsCalledBeforeDrag();
@@ -94,28 +93,12 @@ class TestGestureController {
     });
   }
 
-  void testDragInterpreter() {
-    group('When a drag occure during a tap down/up cycle', () {
-      const dragCount = 20;
-      simulateDrag(dragCount);
-
-      test('assert that Tap() is not called', () {
-        verifyNever(() => _userInteraction.onTap(any()));
-      });
-
-      test('assert that Drag() is called multiple times', () {
-        verify(() => _userInteraction.onDrag(any())).called(dragCount);
-      });
-    });
-  }
-
   void expectPointerOutOfDrawZoneIsIgnored() {
     group('When pointer is out of the DrawZone', () {
       const tapPos = Offset(100, 10);
       final drawZone = DrawZone(const Offset(0, 500), const Size(1000, 500));
       _controller.updateDrawZone(drawZone);
       test('Expect UserInteraction\'s Tap is ignored', () {
-        _controller.onTapDown(TapDownDetails(localPosition: tapPos));
         _controller.onTapUp(TapUpDetails(
           kind: PointerDeviceKind.unknown,
           localPosition: tapPos,
@@ -123,7 +106,6 @@ class TestGestureController {
         verifyNever(() => _userInteraction.onTap(any()));
       });
       test('Expect UserInteraction\'s Drag is ignored', () {
-        _controller.onTapDown(TapDownDetails(localPosition: tapPos));
         _controller.onTapUp(TapUpDetails(
           kind: PointerDeviceKind.unknown,
           localPosition: tapPos,
@@ -136,25 +118,24 @@ class TestGestureController {
   void assertDragStartIsCalledBeforeDrag() {
     test(
         "Check whether interaction DragStart()"
-        "is called one time before drag", () {
+        "is called one time per drag cycle (start/update/end)", () {
+      simulateDrag();
       simulateDrag();
       dragStartFunction() => _userInteraction.onDragStart(captureAny());
       final callResult = verify(dragStartFunction);
-      callResult.called(1);
+      callResult.called(2);
       expect(callResult.captured[0], isInstanceOf<VirtualCoord>());
     });
   }
 
   void simulateTapCycle() {
-    _controller.onTapDown(TapDownDetails());
     _controller.onTapUp(TapUpDetails(kind: PointerDeviceKind.unknown));
   }
 
   void simulateDrag([int dragCount = 10]) {
-    _controller.onTapDown(TapDownDetails());
     for (double i = 0; i < dragCount; i++) {
       _controller.onDrag(DragUpdateDetails(globalPosition: Offset(i, i)));
     }
-    _controller.onTapUp(TapUpDetails(kind: PointerDeviceKind.unknown));
+    _controller.onDragEnd(DragEndDetails());
   }
 }

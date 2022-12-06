@@ -25,6 +25,8 @@ class FakePointerPropagator extends GraphObject with SinglePropagator {
 
   void propagateDragUpdate() =>
       propagate(DragUpdateDetails(globalPosition: Offset.zero));
+
+  void propagateDragEnd() => propagate(DragEndDetails());
 }
 
 void main() {
@@ -37,16 +39,13 @@ void main() {
     final fakePropagator = FakePointerPropagator(entrypoint);
     GraphKernel(child: fakePropagator);
 
-    test('when gesture is a tapDown', () {
-      registerFallbackValue(TapDownDetails());
-      fakePropagator.propagateTapDown();
-      verify(() => mockcontroller.onTapDown(captureAny())).called(1);
-    });
-
-    test('when gesture is dragDown', () {
+    test('when gesture is drag', () {
       registerFallbackValue(DragUpdateDetails(globalPosition: Offset.zero));
+      registerFallbackValue(DragEndDetails());
       fakePropagator.propagateDragUpdate();
+      fakePropagator.propagateDragEnd();
       verify(() => mockcontroller.onDrag(captureAny())).called(1);
+      verify(() => mockcontroller.onDragEnd(any())).called(1);
     });
 
     test('when gesture is TapUp', () {

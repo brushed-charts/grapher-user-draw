@@ -7,8 +7,9 @@ class PointerController extends Viewable with EndlinePropagator {
   late final GestureController _gestureController;
 
   PointerController(this._gestureController) {
-    eventRegistry.add(TapDownDetails, (p0) => _gestureController.onTapDown(p0));
-    eventRegistry.add(DragUpdateDetails, (p0) => _gestureController.onDrag(p0));
     eventRegistry.add(TapUpDetails, (p0) => _gestureController.onTapUp(p0));
+
+    eventRegistry.add(DragUpdateDetails, (p0) => _gestureController.onDrag(p0));
+    eventRegistry.add(DragEndDetails, (p0) => _gestureController.onDragEnd(p0));
   }
 }

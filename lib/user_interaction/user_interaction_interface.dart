@@ -1,4 +1,3 @@
-import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
 abstract class UserInteractionInterface {
