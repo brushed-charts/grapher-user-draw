@@ -19,8 +19,8 @@ void main() {
   when(() => mockTool.maxLength).thenReturn(figureMaxLength);
 
   setUp(() {
-    interactionRef =
-        InteractionReference(MockFigureStore(), MockAnchorSelectionCondition());
+    interactionRef = InteractionReference(MockFigureStore(),
+        MockAnchorSelectionCondition(), MockReferenceReader());
   });
 
   test(

@@ -30,7 +30,8 @@ void main() {
 
   final anchorA = Anchor(x: randomPickedDate, y: randomMockValue1);
   final anchorB = Anchor(x: randomPickedDate, y: randomMockValue2);
-  final edition = EditionInteraction(mockStore, mockSelectionCondition);
+  final edition = EditionInteraction(
+      mockStore, mockSelectionCondition, MockReferenceReader());
 
   registerFallbackValue(Anchor(x: DateTime.now(), y: 0));
   late Function() checkAnchorAForSelection;

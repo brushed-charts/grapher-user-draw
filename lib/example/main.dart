@@ -15,6 +15,7 @@ import 'package:grapher/pipe/pipeIn.dart';
 import 'package:grapher/pipe/pipeOut.dart';
 import 'package:grapher/reference/main.dart';
 import 'package:grapher/reference/memory_repository.dart';
+import 'package:grapher/reference/reader.dart';
 import 'package:grapher/staticLayout/stack.dart';
 import 'package:grapher/tag/tag.dart';
 import 'package:grapher/utils/merge.dart';
@@ -76,19 +77,13 @@ class App extends StatelessWidget {
                 IconButton(
                   iconSize: 32,
                   icon: const Icon(Icons.edit),
-                  color: isCreatingMode == true
-                      ? Colors.deepPurpleAccent
-                      : Colors.grey,
+                  color: Colors.deepPurpleAccent,
                   onPressed: onCreation,
                 ),
                 IconButton(
                   iconSize: 32,
                   icon: const Icon(Icons.switch_access_shortcut),
-                  color: referenceRepository
-                          .access<PointerEventBypassChild>('pointer_bypass')!
-                          .isEnabled
-                      ? Colors.deepPurpleAccent
-                      : Colors.grey,
+                  color: Colors.deepPurpleAccent,
                   onPressed: onBypass,
                 ),
               ],
@@ -145,7 +140,11 @@ class App extends StatelessWidget {
                                                 child: PipeIn(
                                                     name: 'pipe_cell',
                                                     eventType: CellEvent)))))),
-                            fakeToolPropagator.chainUp(child: GrapherUserDraw())
+                            fakeToolPropagator.chainUp(
+                                child: GrapherUserDraw(
+                                    pointerBypass: ReferenceReader(
+                                        refName: "pointer_bypass",
+                                        repository: referenceRepository)))
                           ])))))))),
     ]));
   }

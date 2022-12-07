@@ -1,7 +1,7 @@
 import 'package:grapher_user_draw/coord_translater.dart';
 
 class AnchorYSelectionCondition {
-  static const double _selectionRange = 15;
+  static const double _selectionRange = 25;
   CoordTranslater? _coordTranslater;
 
   isCloseToPointer(double virtualTapY, double virtualAnchorY) {

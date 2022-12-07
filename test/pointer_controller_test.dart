@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
+import 'package:grapher/reference/reader.dart';
+import 'package:grapher_user_draw/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
@@ -13,6 +15,9 @@ import 'package:mocktail/mocktail.dart';
 class MockGestureController extends Mock implements GestureController {}
 
 class MockDrawTool extends Mock implements DrawToolInterface {}
+
+class MockReferenceReader<T extends GraphObject> extends Mock
+    implements ReferenceReader<T> {}
 
 class FakePointerPropagator extends GraphObject with SinglePropagator {
   FakePointerPropagator(GraphObject child) {
@@ -35,7 +40,9 @@ void main() {
     when(() => mockDrawTool.maxLength).thenReturn(3);
 
     final mockcontroller = MockGestureController();
-    final entrypoint = GrapherUserDraw(gestureController: mockcontroller);
+    final bypass = MockReferenceReader<PointerEventBypassChild>();
+    final entrypoint = GrapherUserDraw(
+        pointerBypass: bypass, gestureController: mockcontroller);
     final fakePropagator = FakePointerPropagator(entrypoint);
     GraphKernel(child: fakePropagator);
 

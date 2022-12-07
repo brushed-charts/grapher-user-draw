@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/drawZone.dart';
+import 'package:grapher/kernel/object.dart';
+import 'package:grapher/reference/reader.dart';
+import 'package:grapher_user_draw/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/gesture_controller.dart';
 import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
@@ -16,6 +19,17 @@ import 'package:mocktail/mocktail.dart';
 class MockUserInteraction extends Mock implements CreationInteraction {}
 
 class MockCoordTranslator extends Mock implements CoordTranslater {}
+
+class MockPointerEventBypassChild extends Mock
+    implements PointerEventBypassChild {}
+
+class MockReferenceReader<PointerEventBypassChild extends GraphObject>
+    extends Mock implements ReferenceReader<MockPointerEventBypassChild> {
+  @override
+  MockPointerEventBypassChild? read() {
+    return MockPointerEventBypassChild();
+  }
+}
 
 class MockAnchorSelectionCondition extends Mock
     implements AnchorYSelectionCondition {}
@@ -39,10 +53,11 @@ class TestGestureController {
   TestGestureController() {
     registerFallBacks();
     initMocks();
-    _interactionRef =
-        InteractionReference(_store, MockAnchorSelectionCondition());
+    _interactionRef = InteractionReference(
+        _store, MockAnchorSelectionCondition(), MockReferenceReader());
     _interactionRef.interface = _userInteraction;
     _controller = GestureController(
+      refGraphDragBlocker: MockReferenceReader(),
       interactionReference: _interactionRef,
       translator: _coordTranslator,
     );

@@ -14,7 +14,7 @@ class MockCoordTranslator extends Mock implements CoordTranslater {
 void main() {
   const anyVirtualTapPos = 1.986;
   const anyVirtualAnchorPos = 1.95;
-  const double tapPixelPosition = 27;
+  const double tapPixelPosition = 35;
   const double wantedAnchorPixelPositionA = 25;
   const double wantedAnchorPixelPositionB = 5;
 
