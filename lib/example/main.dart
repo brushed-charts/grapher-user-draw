@@ -8,6 +8,7 @@ import 'package:grapher/filter/incoming-data.dart';
 import 'package:grapher/filter/json/explode.dart';
 import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-candle2D.dart';
+import 'package:grapher/interaction/widget.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/pack/pack.dart';
 import 'package:grapher/pack/unpack-view.dart';
@@ -89,7 +90,7 @@ class App extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: GraphPointer(kernel: graph),
+              child: GraphFullInteraction(kernel: graph),
             )
           ],
         ),
