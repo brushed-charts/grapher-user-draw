@@ -3,13 +3,17 @@ import 'package:grapher_user_draw/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/figure_deletion_interface.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
-import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
+import 'package:grapher_user_draw/user_interaction/drag_interaction_interface.dart';
+import 'package:grapher_user_draw/user_interaction/tap_interaction_interface.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
 import '../anchor.dart';
 
 class EditionInteraction
-    implements UserInteractionInterface, FigureDeletionInterface {
+    implements
+        FigureDeletionInterface,
+        TapInteractionInterface,
+        DragInteractionInterface {
   final FigureStore _store;
   final AnchorYSelectionCondition _anchorSelectCondition;
   final ReferenceReader<PointerEventBypassChild> _refBypassPointer;

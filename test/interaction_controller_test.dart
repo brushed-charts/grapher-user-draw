@@ -8,7 +8,7 @@ import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_controller.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'gesture_controller_test.dart';
+import 'gesture_interpreter_test.dart';
 
 class MockDrawTool extends Mock implements DrawToolInterface {}
 

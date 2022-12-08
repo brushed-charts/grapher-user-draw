@@ -7,8 +7,7 @@ import 'package:grapher_user_draw/keyboard_controller.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'gesture_controller_test.dart';
-import 'presenter_test.dart';
+import 'gesture_interpreter_test.dart';
 
 class MockDeletionTester extends Mock implements FigureDeletionInterface {}
 
@@ -32,7 +31,7 @@ void main() {
   test("Capture and transmit the delete event from keyboard", () {
     final mockEdition = MockUserInteraction();
     final interactionRefence = MockInteractionReference();
-    when(() => interactionRefence.interface).thenReturn(mockEdition);
+    when(() => interactionRefence.deleteInterface).thenReturn(mockEdition);
     final propagator = KeyEventPropagator(
         child: KeyboardController(interactionReference: interactionRefence));
     propagator.emitKeyDownDelete();

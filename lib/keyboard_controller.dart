@@ -10,7 +10,9 @@ class KeyboardController extends GraphObject with EndlinePropagator {
   }
 
   void onKeyDown(KeyDownEvent key) {
-    interactionReference.interface.delete();
+    final objectDeletion = interactionReference.deleteInterface;
+    if (objectDeletion == null) return;
+    objectDeletion.delete();
     setState(this);
   }
 }

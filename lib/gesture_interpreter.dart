@@ -8,14 +8,14 @@ import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
-class GestureController extends GraphObject with EndlinePropagator {
+class GestureInterpreter extends GraphObject with EndlinePropagator {
   final InteractionReference _interactorRef;
   CoordTranslater? _translator;
   final ReferenceReader<PointerEventBypassChild> _refGraphDragBlocker;
   DrawZone? _drawZone;
   bool _hasMoved = false;
 
-  GestureController(
+  GestureInterpreter(
       {required ReferenceReader<PointerEventBypassChild> refGraphDragBlocker,
       CoordTranslater? translator,
       required InteractionReference interactionReference})
@@ -26,7 +26,7 @@ class GestureController extends GraphObject with EndlinePropagator {
   void onTapUp(TapUpDetails event) {
     final vCoord = _tryConvertToVirtual(event.localPosition);
     if (vCoord == null) return;
-    _interactorRef.interface.onTap(vCoord);
+    _interactorRef.tapInterface.onTap(vCoord);
     setState(this);
   }
 
@@ -34,7 +34,7 @@ class GestureController extends GraphObject with EndlinePropagator {
     _callDragStartOnFirstMove(event);
     final vCoord = _tryConvertToVirtual(event.localPosition);
     if (vCoord == null) return;
-    _interactorRef.interface.onDrag(vCoord);
+    _interactorRef.dragInterface?.onDrag(vCoord);
     setState(this);
   }
 
@@ -47,7 +47,7 @@ class GestureController extends GraphObject with EndlinePropagator {
     if (_hasMoved) return;
     final vCoord = _tryConvertToVirtual(event.localPosition);
     if (vCoord == null) return;
-    _interactorRef.interface.onDragStart(vCoord);
+    _interactorRef.dragInterface?.onDragStart(vCoord);
     _hasMoved = true;
   }
 

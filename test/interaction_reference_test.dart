@@ -6,7 +6,7 @@ import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
 import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'gesture_controller_test.dart';
+import 'gesture_interpreter_test.dart';
 
 class MockFigureStore extends Mock implements FigureStore {}
 
@@ -28,8 +28,8 @@ void main() {
       "when non null tool is received", () {
     interactionRef.tool = mockTool;
     expect(interactionRef.tool, equals(mockTool));
-    expect(interactionRef.interface, isInstanceOf<CreationInteraction>());
-    expect((interactionRef.interface as CreationInteraction).figureLength,
+    expect(interactionRef.tapInterface, isInstanceOf<CreationInteraction>());
+    expect((interactionRef.tapInterface as CreationInteraction).figureLength,
         figureMaxLength);
   });
 
@@ -37,7 +37,7 @@ void main() {
       "Assert interaction reference switch to edition"
       "when tool received is null", () {
     interactionRef.tool = null;
-    expect(interactionRef.interface, isInstanceOf<EditionInteraction>());
+    expect(interactionRef.tapInterface, isInstanceOf<EditionInteraction>());
     expect(interactionRef.tool, isNull);
   });
 }

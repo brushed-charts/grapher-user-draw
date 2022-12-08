@@ -1,12 +1,12 @@
 import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/store.dart';
-import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
+import 'package:grapher_user_draw/user_interaction/tap_interaction_interface.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
 import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/figure.dart';
 
-class CreationInteraction implements UserInteractionInterface {
+class CreationInteraction implements TapInteractionInterface {
   final FigureStore _store;
   Figure? _currentFigure;
   final DrawToolInterface tool;
@@ -26,13 +26,4 @@ class CreationInteraction implements UserInteractionInterface {
     if (!shouldBeInit) return;
     _currentFigure = Figure(tool);
   }
-
-  @override
-  void onDrag(VirtualCoord coord) {}
-
-  @override
-  void onDragStart(VirtualCoord coord) {}
-
-  @override
-  void delete() {}
 }

@@ -7,8 +7,9 @@ import 'package:grapher/kernel/object.dart';
 import 'package:grapher/reference/reader.dart';
 import 'package:grapher_user_draw/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/gesture_controller.dart';
+import 'package:grapher_user_draw/gesture_interpreter.dart';
 import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
+import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
@@ -16,7 +17,7 @@ import 'package:grapher_user_draw/user_interaction/user_interaction_interface.da
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockUserInteraction extends Mock implements CreationInteraction {}
+class MockUserInteraction extends Mock implements EditionInteraction {}
 
 class MockCoordTranslator extends Mock implements CoordTranslater {}
 
@@ -35,14 +36,14 @@ class MockAnchorSelectionCondition extends Mock
     implements AnchorYSelectionCondition {}
 
 void main() {
-  TestGestureController().testInterpretationOfTap();
-  TestGestureController().testThereIsNoCallWhenVCoordIsNull();
-  TestGestureController().expectPointerOutOfDrawZoneIsIgnored();
-  TestGestureController().assertDragStartIsCalledBeforeDrag();
+  TestGestureInterpreter().testInterpretationOfTap();
+  TestGestureInterpreter().testThereIsNoCallWhenVCoordIsNull();
+  TestGestureInterpreter().expectPointerOutOfDrawZoneIsIgnored();
+  TestGestureInterpreter().assertDragStartIsCalledBeforeDrag();
 }
 
-class TestGestureController {
-  late final GestureController _controller;
+class TestGestureInterpreter {
+  late final GestureInterpreter _interpreter;
   late final UserInteractionInterface _userInteraction;
   late final InteractionReference _interactionRef;
   late final CoordTranslater _coordTranslator;
@@ -50,18 +51,19 @@ class TestGestureController {
   final outputVCoord = VirtualCoord(DateTime(2022, 11, 17, 15), 1495);
   final _safeDrawZone = DrawZone(const Offset(0, 0), const Size(10000, 10000));
 
-  TestGestureController() {
+  TestGestureInterpreter() {
     registerFallBacks();
     initMocks();
     _interactionRef = InteractionReference(
         _store, MockAnchorSelectionCondition(), MockReferenceReader());
-    _interactionRef.interface = _userInteraction;
-    _controller = GestureController(
+    _interactionRef.tapInterface = _userInteraction as MockUserInteraction;
+    _interactionRef.dragInterface = _userInteraction as MockUserInteraction;
+    _interpreter = GestureInterpreter(
       refGraphDragBlocker: MockReferenceReader(),
       interactionReference: _interactionRef,
       translator: _coordTranslator,
     );
-    _controller.updateDrawZone(_safeDrawZone);
+    _interpreter.updateDrawZone(_safeDrawZone);
 
     mockTranslationToVirtual() => _coordTranslator.toVirtual(any());
     when(() => mockTranslationToVirtual()).thenReturn(outputVCoord);
@@ -112,16 +114,16 @@ class TestGestureController {
     group('When pointer is out of the DrawZone', () {
       const tapPos = Offset(100, 10);
       final drawZone = DrawZone(const Offset(0, 500), const Size(1000, 500));
-      _controller.updateDrawZone(drawZone);
+      _interpreter.updateDrawZone(drawZone);
       test('Expect UserInteraction\'s Tap is ignored', () {
-        _controller.onTapUp(TapUpDetails(
+        _interpreter.onTapUp(TapUpDetails(
           kind: PointerDeviceKind.unknown,
           localPosition: tapPos,
         ));
         verifyNever(() => _userInteraction.onTap(any()));
       });
       test('Expect UserInteraction\'s Drag is ignored', () {
-        _controller.onTapUp(TapUpDetails(
+        _interpreter.onTapUp(TapUpDetails(
           kind: PointerDeviceKind.unknown,
           localPosition: tapPos,
         ));
@@ -144,13 +146,13 @@ class TestGestureController {
   }
 
   void simulateTapCycle() {
-    _controller.onTapUp(TapUpDetails(kind: PointerDeviceKind.unknown));
+    _interpreter.onTapUp(TapUpDetails(kind: PointerDeviceKind.unknown));
   }
 
   void simulateDrag([int dragCount = 10]) {
     for (double i = 0; i < dragCount; i++) {
-      _controller.onDrag(DragUpdateDetails(globalPosition: Offset(i, i)));
+      _interpreter.onDrag(DragUpdateDetails(globalPosition: Offset(i, i)));
     }
-    _controller.onDragEnd(DragEndDetails());
+    _interpreter.onDragEnd(DragEndDetails());
   }
 }

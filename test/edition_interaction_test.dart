@@ -7,7 +7,7 @@ import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'gesture_controller_test.dart';
+import 'gesture_interpreter_test.dart';
 import 'presenter_test.dart';
 
 class MockVirtualAxis extends Mock implements VirtualAxis {}

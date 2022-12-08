@@ -5,7 +5,7 @@ import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/viewable.dart';
 import 'package:grapher_user_draw/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/gesture_controller.dart';
+import 'package:grapher_user_draw/gesture_interpreter.dart';
 import 'package:grapher_user_draw/keyboard_controller.dart';
 import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
@@ -15,7 +15,7 @@ import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_controller.dart';
 
 class GrapherUserDraw extends Viewable with MultiPropagator {
-  late final GestureController _gestureController;
+  late final GestureInterpreter _gestureController;
   late final DrawPresenter _drawPresenter;
   final FigureStore _store = FigureStore();
   final _anchorSelectCondition = AnchorYSelectionCondition();
@@ -26,7 +26,7 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
 
   GrapherUserDraw(
       {required ReferenceReader<PointerEventBypassChild> pointerBypass,
-      GestureController? gestureController,
+      GestureInterpreter? gestureController,
       KeyboardController? keyboardController,
       DrawPresenter? drawPresenter})
       : _pointerBypassRef = pointerBypass {
@@ -34,7 +34,7 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
         KeyboardController(interactionReference: _interactionRef);
     _drawPresenter = drawPresenter ?? DrawPresenter(_store);
     _gestureController = gestureController ??
-        GestureController(
+        GestureInterpreter(
             refGraphDragBlocker: _pointerBypassRef,
             interactionReference: _interactionRef);
     children = <GraphObject>[];
