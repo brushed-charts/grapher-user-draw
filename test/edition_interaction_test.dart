@@ -14,7 +14,9 @@ class MockVirtualAxis extends Mock implements VirtualAxis {}
 
 class MockCoordTranslator extends Mock implements CoordTranslater {}
 
-class MockFigure extends Mock implements Figure {}
+class MockFigure extends Mock implements Figure {
+  int groupID = 1234;
+}
 
 void main() {
   final mockStore = MockStore();
@@ -88,5 +90,15 @@ void main() {
       expect(edition.anchorSelected, isNull);
       verifyNever(() => mockFigure.replace(any(), any()));
     });
+  });
+
+  test(
+      "During edition on deletion trigger, "
+      "expect the whole figure to be removed", () {
+    when(checkAnchorBForSelection).thenReturn(true);
+    edition.onTap(pointerPosition);
+    edition.delete();
+    verify(() => mockStore.delete(any())).called(1);
+    expect(edition.anchorSelected, isNull);
   });
 }

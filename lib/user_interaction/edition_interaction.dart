@@ -1,5 +1,6 @@
 import 'package:grapher/reference/reader.dart';
 import 'package:grapher_user_draw/bypass_pointer_event.dart';
+import 'package:grapher_user_draw/figure_deletion_interface.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
 import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
@@ -7,11 +8,13 @@ import 'package:grapher_user_draw/virtual_coord.dart';
 
 import '../anchor.dart';
 
-class EditionInteraction implements UserInteractionInterface {
+class EditionInteraction
+    implements UserInteractionInterface, FigureDeletionInterface {
   final FigureStore _store;
   final AnchorYSelectionCondition _anchorSelectCondition;
   final ReferenceReader<PointerEventBypassChild> _refBypassPointer;
   Anchor? _anchorSelected;
+  Anchor? get anchorSelected => _anchorSelected;
 
   EditionInteraction(
       this._store, this._anchorSelectCondition, this._refBypassPointer);
@@ -42,10 +45,16 @@ class EditionInteraction implements UserInteractionInterface {
     _refBypassPointer.read()!.enable();
   }
 
-  Anchor? get anchorSelected => _anchorSelected;
-
   @override
   void onDragStart(VirtualCoord coord) {
     _updateAnchorSelected(coord);
+  }
+
+  @override
+  void delete() {
+    if (_anchorSelected == null) return;
+    final figureSelected = _store.getByAnchor(_anchorSelected!)!;
+    _store.delete(figureSelected.groupID);
+    _anchorSelected = null;
   }
 }

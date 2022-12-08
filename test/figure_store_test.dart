@@ -83,6 +83,23 @@ void main() {
       expect(retrievedFigure, equals(expectedFigure));
     });
   });
+
+  group("Inside FigureStore, on deletion", () {
+    test("assert the expected figure is removed when groupID is found", () {
+      final idToRemove = figurePopulation[2].groupID;
+      addFiguresToStore(store, figurePopulation);
+      store.delete(idToRemove);
+      expect(store.getByID(idToRemove), isNull);
+      expect(store.length, figurePopulation.length - 1);
+    });
+    test("assert no figure is deleted if groupID was not found", () {
+      const randomID = 0;
+      addFiguresToStore(store, figurePopulation);
+      store.delete(randomID);
+      expect(store.getByID(randomID), isNull);
+      expect(store.length, figurePopulation.length);
+    });
+  });
 }
 
 void addFiguresToStore(FigureStore store, List<Figure> figureList) {

@@ -1,14 +1,16 @@
 import 'package:flutter/services.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/endline.dart';
-
-import 'figure_deletion_interface.dart';
+import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 
 class KeyboardController extends GraphObject with EndlinePropagator {
-  final FigureDeletionInterface figureDeletion;
-  KeyboardController({required this.figureDeletion}) {
+  final InteractionReference interactionReference;
+  KeyboardController({required this.interactionReference}) {
     eventRegistry.add(KeyDownEvent, (p0) => onKeyDown(p0));
   }
 
-  void onKeyDown(KeyDownEvent key) => figureDeletion.delete();
+  void onKeyDown(KeyDownEvent key) {
+    interactionReference.interface.delete();
+    setState(this);
+  }
 }

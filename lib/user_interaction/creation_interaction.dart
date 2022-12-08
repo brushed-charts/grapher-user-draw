@@ -32,4 +32,7 @@ class CreationInteraction implements UserInteractionInterface {
 
   @override
   void onDragStart(VirtualCoord coord) {}
+
+  @override
+  void delete() {}
 }

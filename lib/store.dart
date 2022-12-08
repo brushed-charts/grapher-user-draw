@@ -40,4 +40,8 @@ class FigureStore {
 
     return matchingFigure;
   }
+
+  void delete(int groupID) {
+    _figures.remove(groupID);
+  }
 }

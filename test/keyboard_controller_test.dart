@@ -4,9 +4,15 @@ import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher_user_draw/figure_deletion_interface.dart';
 import 'package:grapher_user_draw/keyboard_controller.dart';
+import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'gesture_controller_test.dart';
+import 'presenter_test.dart';
+
 class MockDeletionTester extends Mock implements FigureDeletionInterface {}
+
+class MockInteractionReference extends Mock implements InteractionReference {}
 
 class KeyEventPropagator extends GraphObject with SinglePropagator {
   KeyEventPropagator({required GraphObject child}) {
@@ -24,10 +30,12 @@ class KeyEventPropagator extends GraphObject with SinglePropagator {
 
 void main() {
   test("Capture and transmit the delete event from keyboard", () {
-    final mockDeletion = MockDeletionTester();
+    final mockEdition = MockUserInteraction();
+    final interactionRefence = MockInteractionReference();
+    when(() => interactionRefence.interface).thenReturn(mockEdition);
     final propagator = KeyEventPropagator(
-        child: KeyboardController(figureDeletion: mockDeletion));
+        child: KeyboardController(interactionReference: interactionRefence));
     propagator.emitKeyDownDelete();
-    verify(() => mockDeletion.delete()).called(1);
+    verify(() => mockEdition.delete()).called(1);
   });
 }
