@@ -6,10 +6,9 @@ import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/reference/reader.dart';
-import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
-import 'package:grapher_user_draw/entrypoint_viewable.dart';
 import 'package:grapher_user_draw/user_interaction/gesture_interpreter.dart';
+import 'package:grapher_user_draw/user_interaction/pointer_controller.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockGestureController extends Mock implements GestureInterpreter {}
@@ -40,10 +39,8 @@ void main() {
     when(() => mockDrawTool.maxLength).thenReturn(3);
 
     final mockcontroller = MockGestureController();
-    final bypass = MockReferenceReader<PointerEventBypassChild>();
-    final entrypoint = GrapherUserDraw(
-        pointerBypass: bypass, gestureController: mockcontroller);
-    final fakePropagator = FakePointerPropagator(entrypoint);
+    final pointerController = PointerController(mockcontroller);
+    final fakePropagator = FakePointerPropagator(pointerController);
     GraphKernel(child: fakePropagator);
 
     test('when gesture is drag', () {

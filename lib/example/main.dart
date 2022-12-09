@@ -23,9 +23,11 @@ import 'package:grapher/utils/merge.dart';
 import 'package:grapher/view/window.dart';
 
 import 'package:flutter/material.dart';
-import 'package:grapher/pointer/widget.dart';
+import 'package:grapher_user_draw/presenter.dart';
+import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
+import 'package:grapher_user_draw/user_interaction/main_user_interaction.dart';
 import 'draw_tool_tester.dart';
 import 'fake_tool_propagator.dart';
 
@@ -33,6 +35,7 @@ import 'json.dart';
 
 final fakeToolPropagator = FakeToolPropagator();
 final referenceRepository = ReferenceRepositoryInMemory();
+final figureStore = FigureStore();
 var isCreatingMode = true;
 
 main(List<String> args) async {
@@ -143,9 +146,13 @@ class App extends StatelessWidget {
                                                     eventType: CellEvent)))))),
                             fakeToolPropagator.chainUp(
                                 child: GrapherUserDraw(
-                                    pointerBypass: ReferenceReader(
-                                        refName: "pointer_bypass",
-                                        repository: referenceRepository)))
+                                    store: figureStore,
+                                    drawPresenter: DrawPresenter(figureStore),
+                                    interaction: UserInteraction(
+                                        store: figureStore,
+                                        refPointerBypass: ReferenceReader(
+                                            refName: "pointer_bypass",
+                                            repository: referenceRepository))))
                           ])))))))),
     ]));
   }

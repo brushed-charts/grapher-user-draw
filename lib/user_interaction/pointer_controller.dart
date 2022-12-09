@@ -4,12 +4,13 @@ import 'package:grapher/view/viewable.dart';
 import 'package:grapher_user_draw/user_interaction/gesture_interpreter.dart';
 
 class PointerController extends Viewable with EndlinePropagator {
-  late final GestureInterpreter _gestureController;
+  late final GestureInterpreter _gestureInterpreter;
 
-  PointerController(this._gestureController) {
-    eventRegistry.add(TapUpDetails, (p0) => _gestureController.onTapUp(p0));
-
-    eventRegistry.add(DragUpdateDetails, (p0) => _gestureController.onDrag(p0));
-    eventRegistry.add(DragEndDetails, (p0) => _gestureController.onDragEnd(p0));
+  PointerController(this._gestureInterpreter) {
+    eventRegistry.add(TapUpDetails, (p0) => _gestureInterpreter.onTapUp(p0));
+    eventRegistry.add(
+        DragUpdateDetails, (p0) => _gestureInterpreter.onDrag(p0));
+    eventRegistry.add(
+        DragEndDetails, (p0) => _gestureInterpreter.onDragEnd(p0));
   }
 }

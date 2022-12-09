@@ -1,59 +1,27 @@
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/multi.dart';
-import 'package:grapher/reference/reader.dart';
 import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/viewable.dart';
-import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
-import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/user_interaction/gesture_interpreter.dart';
-import 'package:grapher_user_draw/user_interaction/keyboard_controller.dart';
-import 'package:grapher_user_draw/user_interaction/pointer_convertion_logic.dart';
-import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
-import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
-import 'package:grapher_user_draw/user_interaction/pointer_controller.dart';
 import 'package:grapher_user_draw/presenter.dart';
 import 'package:grapher_user_draw/store.dart';
-import 'package:grapher_user_draw/user_interaction/interaction_controller.dart';
+import 'package:grapher_user_draw/user_interaction/main_user_interaction.dart';
 
 class GrapherUserDraw extends Viewable with MultiPropagator {
-  late final GestureInterpreter _gestureController;
-  late final DrawPresenter _drawPresenter;
-  final FigureStore _store = FigureStore();
-  final _anchorSelectCondition = AnchorYSelectionCondition();
-  late final _interactionRef =
-      InteractionReference(_store, _anchorSelectCondition, _pointerBypassRef);
-  final ReferenceReader<PointerEventBypassChild> _pointerBypassRef;
-  late final KeyboardController _keyboardController;
-  final _pointerConverter = PointerConvertionLogic();
+  late final DrawPresenter drawPresenter;
+  final FigureStore store;
+  final UserInteraction? interaction;
 
   GrapherUserDraw(
-      {required ReferenceReader<PointerEventBypassChild> pointerBypass,
-      GestureInterpreter? gestureController,
-      KeyboardController? keyboardController,
-      DrawPresenter? drawPresenter})
-      : _pointerBypassRef = pointerBypass {
-    _keyboardController = keyboardController ??
-        KeyboardController(interactionReference: _interactionRef);
-    _drawPresenter = drawPresenter ?? DrawPresenter(_store);
-    _gestureController = gestureController ??
-        GestureInterpreter(
-            zoneConverter: _pointerConverter,
-            refGraphDragBlocker: _pointerBypassRef,
-            interactionReference: _interactionRef);
+      {this.interaction, DrawPresenter? drawPresenter, required this.store}) {
+    drawPresenter = drawPresenter ?? DrawPresenter(store);
     children = <GraphObject>[];
-    children.add(InteractionController(_interactionRef));
-    children.add(PointerController(_gestureController));
-    children.add(_gestureController);
-    children.add(_keyboardController);
-    children.add(_drawPresenter);
+    if (interaction != null) children.add(interaction!);
+    children.add(drawPresenter);
   }
 
   @override
   void draw(ViewEvent viewEvent) {
     super.draw(viewEvent);
-    final coordTranslator = CoordTranslater(viewEvent.xAxis, viewEvent.yAxis);
-    _pointerConverter.refresh(coordTranslator, viewEvent.drawZone.toRect);
-    _anchorSelectCondition.updateCoordTranslater(coordTranslator);
     propagate(viewEvent);
   }
 }

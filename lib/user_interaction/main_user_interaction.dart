@@ -1,3 +1,4 @@
+import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/multi.dart';
 import 'package:grapher/reference/reader.dart';
 import 'package:grapher/view/view-event.dart';
@@ -11,13 +12,12 @@ import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:grapher_user_draw/user_interaction/keyboard_controller.dart';
 import 'package:grapher_user_draw/user_interaction/pointer_controller.dart';
 import 'package:grapher_user_draw/user_interaction/pointer_convertion_logic.dart';
-
-import '../coord_translater.dart';
+import 'package:grapher_user_draw/coord_translater.dart';
 
 class UserInteraction extends Viewable with MultiPropagator {
   final FigureStore store;
   final ReferenceReader<PointerEventBypassChild> refPointerBypass;
-  final PointerConvertionLogic pointerConvertion = PointerConvertionLogic();
+  final pointerConvertion = PointerConvertionLogic();
   final selectionCondition = AnchorYSelectionCondition();
 
   late final PointerController pointerController;
@@ -27,13 +27,14 @@ class UserInteraction extends Viewable with MultiPropagator {
   late final GestureInterpreter gestureInterpreter;
 
   UserInteraction({required this.store, required this.refPointerBypass}) {
+    children = <GraphObject>[];
     init();
-    addControllerAsChildren();
+    composeChildren();
   }
 
   void init() {
-    interactionReference = InteractionReference(
-        store, AnchorYSelectionCondition(), refPointerBypass);
+    interactionReference =
+        InteractionReference(store, selectionCondition, refPointerBypass);
 
     gestureInterpreter = GestureInterpreter(
         interactionReference: interactionReference,
@@ -44,13 +45,15 @@ class UserInteraction extends Viewable with MultiPropagator {
 
     keyboardController =
         KeyboardController(interactionReference: interactionReference);
+
     pointerController = PointerController(gestureInterpreter);
   }
 
-  void addControllerAsChildren() {
+  void composeChildren() {
     children.add(interactionController);
     children.add(pointerController);
     children.add(keyboardController);
+    children.add(gestureInterpreter);
   }
 
   @override
