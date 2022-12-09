@@ -4,18 +4,19 @@ import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/viewable.dart';
 import 'package:grapher_user_draw/presenter.dart';
 import 'package:grapher_user_draw/store.dart';
-import 'package:grapher_user_draw/user_interaction/main_user_interaction.dart';
+import 'package:grapher_user_draw/user_interaction/main_userinteraction.dart';
 
 class GrapherUserDraw extends Viewable with MultiPropagator {
   late final DrawPresenter drawPresenter;
   final FigureStore store;
-  final UserInteraction? interaction;
+  final UserInteraction interaction;
 
   GrapherUserDraw(
-      {this.interaction, DrawPresenter? drawPresenter, required this.store}) {
-    drawPresenter = drawPresenter ?? DrawPresenter(store);
+      {required this.interaction,
+      required this.store,
+      required DrawPresenter drawPresenter}) {
     children = <GraphObject>[];
-    if (interaction != null) children.add(interaction!);
+    children.add(interaction);
     children.add(drawPresenter);
   }
 

@@ -27,7 +27,7 @@ import 'package:grapher_user_draw/presenter.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
-import 'package:grapher_user_draw/user_interaction/main_user_interaction.dart';
+import 'package:grapher_user_draw/user_interaction/main_userinteraction.dart';
 import 'draw_tool_tester.dart';
 import 'fake_tool_propagator.dart';
 
