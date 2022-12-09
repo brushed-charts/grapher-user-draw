@@ -1,12 +1,11 @@
 import 'dart:ui';
 
-import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 
 import 'coord_translater.dart';
 
 class PointerConvertionLogic {
-  DrawZone? _drawZone;
+  Rect? _zonePointable;
   CoordTranslater? _translator;
 
   VirtualCoord? toVirtual(Offset pixelPosition) {
@@ -17,7 +16,7 @@ class PointerConvertionLogic {
   }
 
   bool _isInDrawZone(Offset position) {
-    return _drawZone!.toRect.contains(position);
+    return _zonePointable!.contains(position);
   }
 
   VirtualCoord? _convertToVirtual(Offset position) {
@@ -25,14 +24,14 @@ class PointerConvertionLogic {
   }
 
   void _throwIfNotInit() {
-    if (_drawZone != null && _translator != null) return;
+    if (_zonePointable != null && _translator != null) return;
     throw StateError("The drawZone and coordTranslater should be init "
         "before user can interact with the graph. "
         "It is probably due to a draw event that doesn't occured");
   }
 
-  refresh(CoordTranslater translater, DrawZone drawZone) {
+  refresh(CoordTranslater translater, Rect? zonePointable) {
     _translator = translater;
-    _drawZone = drawZone;
+    _zonePointable = zonePointable;
   }
 }

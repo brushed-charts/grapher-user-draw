@@ -52,7 +52,7 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
   void draw(ViewEvent viewEvent) {
     super.draw(viewEvent);
     final coordTranslator = CoordTranslater(viewEvent.xAxis, viewEvent.yAxis);
-    _pointerConverter.refresh(coordTranslator, viewEvent.drawZone);
+    _pointerConverter.refresh(coordTranslator, viewEvent.drawZone.toRect);
     _anchorSelectCondition.updateCoordTranslater(coordTranslator);
     propagate(viewEvent);
   }
