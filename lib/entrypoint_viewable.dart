@@ -7,6 +7,7 @@ import 'package:grapher_user_draw/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/gesture_interpreter.dart';
 import 'package:grapher_user_draw/keyboard_controller.dart';
+import 'package:grapher_user_draw/pointer_convertion_logic.dart';
 import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:grapher_user_draw/pointer_controller.dart';
@@ -23,6 +24,7 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
       InteractionReference(_store, _anchorSelectCondition, _pointerBypassRef);
   final ReferenceReader<PointerEventBypassChild> _pointerBypassRef;
   late final KeyboardController _keyboardController;
+  final _pointerConverter = PointerConvertionLogic();
 
   GrapherUserDraw(
       {required ReferenceReader<PointerEventBypassChild> pointerBypass,
@@ -35,6 +37,7 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
     _drawPresenter = drawPresenter ?? DrawPresenter(_store);
     _gestureController = gestureController ??
         GestureInterpreter(
+            zoneConverter: _pointerConverter,
             refGraphDragBlocker: _pointerBypassRef,
             interactionReference: _interactionRef);
     children = <GraphObject>[];
@@ -49,10 +52,8 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
   void draw(ViewEvent viewEvent) {
     super.draw(viewEvent);
     final coordTranslator = CoordTranslater(viewEvent.xAxis, viewEvent.yAxis);
-    _gestureController.updateTranslator(coordTranslator);
+    _pointerConverter.refresh(coordTranslator, viewEvent.drawZone);
     _anchorSelectCondition.updateCoordTranslater(coordTranslator);
-
-    _gestureController.updateDrawZone(viewEvent.drawZone);
     propagate(viewEvent);
   }
 }

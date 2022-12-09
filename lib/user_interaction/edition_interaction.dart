@@ -11,9 +11,9 @@ import '../anchor.dart';
 
 class EditionInteraction
     implements
-        FigureDeletionInterface,
         TapInteractionInterface,
-        DragInteractionInterface {
+        DragInteractionInterface,
+        FigureDeletionInterface {
   final FigureStore _store;
   final AnchorYSelectionCondition _anchorSelectCondition;
   final ReferenceReader<PointerEventBypassChild> _refBypassPointer;
