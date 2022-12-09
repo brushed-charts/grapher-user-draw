@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-// import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/reference/reader.dart';
 import 'package:grapher_user_draw/bypass_pointer_event.dart';
@@ -49,7 +48,6 @@ class TestGestureInterpreter {
   late final InteractionReference _interactionRef;
   final _store = FigureStore();
   final outputVCoord = VirtualCoord(DateTime(2022, 11, 17, 15), 1495);
-  // final _safeDrawZone = DrawZone(const Offset(0, 0), const Size(10000, 10000));
   late final MockPointerConverterLogic _mockConverterLogic;
 
   TestGestureInterpreter() {
@@ -63,7 +61,6 @@ class TestGestureInterpreter {
         refGraphDragBlocker: MockReferenceReader(),
         interactionReference: _interactionRef,
         zoneConverter: _mockConverterLogic);
-    // _interpreter.updateDrawZone(_safeDrawZone);
 
     mockConvertionToVirtual() => _mockConverterLogic.toVirtual(any());
     when(() => mockConvertionToVirtual()).thenReturn(outputVCoord);
@@ -109,28 +106,6 @@ class TestGestureInterpreter {
       });
     });
   }
-
-  // void expectPointerOutOfDrawZoneIsIgnored() {
-  //   group('When pointer is out of the DrawZone', () {
-  //     const tapPos = Offset(100, 10);
-  //     // final drawZone = DrawZone(const Offset(0, 500), const Size(1000, 500));
-  //     // _interpreter.updateDrawZone(drawZone);
-  //     test('Expect UserInteraction\'s Tap is ignored', () {
-  //       _interpreter.onTapUp(TapUpDetails(
-  //         kind: PointerDeviceKind.unknown,
-  //         localPosition: tapPos,
-  //       ));
-  //       verifyNever(() => _interactionRef.tapInterface.onTap(any()));
-  //     });
-  //     test('Expect UserInteraction\'s Drag is ignored', () {
-  //       _interpreter.onTapUp(TapUpDetails(
-  //         kind: PointerDeviceKind.unknown,
-  //         localPosition: tapPos,
-  //       ));
-  //       verifyNever(() => _interactionRef.tapInterface.onTap(any()));
-  //     });
-  //   });
-  // }
 
   void assertDragStartIsCalledBeforeDrag() {
     test(
