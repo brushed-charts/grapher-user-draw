@@ -1,15 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher_user_draw/anchor.dart';
+import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/figure.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:mocktail/mocktail.dart';
-
-import 'creation_interaction_test.dart';
 
 class MockFigure extends Mock implements Figure {
   @override
   final int groupID;
   MockFigure({required this.groupID});
+}
+
+class MockDrawTool extends Mock implements DrawToolInterface {
+  @override
+  final int maxLength;
+  MockDrawTool(this.maxLength);
 }
 
 void main() {

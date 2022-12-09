@@ -3,16 +3,18 @@ import 'package:grapher/view/axis/virtual-axis.dart';
 import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/figure.dart';
+import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'gesture_interpreter_test.dart';
-import 'presenter_test.dart';
 
 class MockVirtualAxis extends Mock implements VirtualAxis {}
 
 class MockCoordTranslator extends Mock implements CoordTranslater {}
+
+class MockStore extends Mock implements FigureStore {}
 
 class MockFigure extends Mock implements Figure {
   int groupID = 1234;

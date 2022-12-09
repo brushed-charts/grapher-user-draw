@@ -4,10 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/reference/reader.dart';
-import 'package:grapher_user_draw/bypass_pointer_event.dart';
+import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/gesture_interpreter.dart';
-import 'package:grapher_user_draw/pointer_convertion_logic.dart';
+import 'package:grapher_user_draw/user_interaction/gesture_interpreter.dart';
+import 'package:grapher_user_draw/user_interaction/pointer_convertion_logic.dart';
 import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
 import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
@@ -39,7 +39,6 @@ class MockAnchorSelectionCondition extends Mock
 void main() {
   TestGestureInterpreter().testInterpretationOfTap();
   TestGestureInterpreter().testThereIsNoCallWhenVCoordIsNull();
-  // TestGestureInterpreter().expectPointerOutOfDrawZoneIsIgnored();
   TestGestureInterpreter().assertDragStartIsCalledBeforeDrag();
 }
 

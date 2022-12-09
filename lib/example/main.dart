@@ -24,7 +24,7 @@ import 'package:grapher/view/window.dart';
 
 import 'package:flutter/material.dart';
 import 'package:grapher/pointer/widget.dart';
-import 'package:grapher_user_draw/bypass_pointer_event.dart';
+import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
 import 'draw_tool_tester.dart';
 import 'fake_tool_propagator.dart';

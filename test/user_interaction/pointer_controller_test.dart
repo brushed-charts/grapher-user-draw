@@ -6,10 +6,10 @@ import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/reference/reader.dart';
-import 'package:grapher_user_draw/bypass_pointer_event.dart';
+import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
-import 'package:grapher_user_draw/gesture_interpreter.dart';
+import 'package:grapher_user_draw/user_interaction/gesture_interpreter.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockGestureController extends Mock implements GestureInterpreter {}

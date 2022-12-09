@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:grapher_user_draw/virtual_coord.dart';
 
-import 'coord_translater.dart';
+import '../coord_translater.dart';
 
 class PointerConvertionLogic {
   Rect? _zonePointable;

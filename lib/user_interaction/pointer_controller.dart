@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher/view/viewable.dart';
-import 'package:grapher_user_draw/gesture_interpreter.dart';
+import 'package:grapher_user_draw/user_interaction/gesture_interpreter.dart';
 
 class PointerController extends Viewable with EndlinePropagator {
   late final GestureInterpreter _gestureController;

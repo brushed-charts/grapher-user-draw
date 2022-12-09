@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/pointer_convertion_logic.dart';
+import 'package:grapher_user_draw/user_interaction/pointer_convertion_logic.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
 

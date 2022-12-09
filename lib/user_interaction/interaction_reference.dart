@@ -1,15 +1,14 @@
 import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher/reference/reader.dart';
 import 'package:grapher/view/viewable.dart';
-import 'package:grapher_user_draw/bypass_pointer_event.dart';
-import 'package:grapher_user_draw/figure_deletion_interface.dart';
+import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
+import 'package:grapher_user_draw/user_interaction/figure_deletion_interface.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
 import 'package:grapher_user_draw/user_interaction/drag_interaction_interface.dart';
 import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:grapher_user_draw/user_interaction/tap_interaction_interface.dart';
-import 'package:grapher_user_draw/user_interaction/user_interaction_interface.dart';
 
 import '../draw_tools/draw_tool_interface.dart';
 

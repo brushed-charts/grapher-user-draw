@@ -2,8 +2,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
-import 'package:grapher_user_draw/figure_deletion_interface.dart';
-import 'package:grapher_user_draw/keyboard_controller.dart';
+import 'package:grapher_user_draw/user_interaction/figure_deletion_interface.dart';
+import 'package:grapher_user_draw/user_interaction/keyboard_controller.dart';
 import 'package:grapher_user_draw/user_interaction/interaction_reference.dart';
 import 'package:mocktail/mocktail.dart';
 

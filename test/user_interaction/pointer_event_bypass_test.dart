@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
-import 'package:grapher_user_draw/bypass_pointer_event.dart';
+import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 
 class MockPointerPropagator extends GraphObject with SinglePropagator {
   MockPointerPropagator({required GraphObject child}) {
