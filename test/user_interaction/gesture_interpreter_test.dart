@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/reference/reader.dart';
+import 'package:grapher_user_draw/figure_database_interface.dart';
 import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
 import 'package:grapher_user_draw/user_interaction/gesture_interpreter.dart';
@@ -36,6 +37,8 @@ class MockReferenceReader<PointerEventBypassChild extends GraphObject>
 class MockAnchorSelectionCondition extends Mock
     implements AnchorYSelectionCondition {}
 
+class MockFigureDatabase extends Mock implements FigureDatabaseInterface {}
+
 void main() {
   TestGestureInterpreter().testInterpretationOfTap();
   TestGestureInterpreter().testThereIsNoCallWhenVCoordIsNull();
@@ -53,7 +56,10 @@ class TestGestureInterpreter {
     registerFallBacks();
     initMocks();
     _interactionRef = InteractionReference(
-        _store, MockAnchorSelectionCondition(), MockReferenceReader());
+        _store,
+        MockAnchorSelectionCondition(),
+        MockReferenceReader(),
+        MockFigureDatabase());
     _interactionRef.tapInterface = MockUserInteraction();
     _interactionRef.dragInterface = MockUserInteraction();
     _interpreter = GestureInterpreter(

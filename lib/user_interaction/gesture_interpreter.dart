@@ -37,7 +37,7 @@ class GestureInterpreter extends GraphObject with EndlinePropagator {
 
   void onDragEnd(DragEndDetails event) {
     _hasMoved = false;
-    _refGraphDragBlocker.read()!.disable();
+    _interactorRef.dragInterface?.onDragEnd();
   }
 
   void _callDragStartOnFirstMove(DragUpdateDetails event) {

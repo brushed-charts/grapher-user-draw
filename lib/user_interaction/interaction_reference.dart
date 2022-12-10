@@ -1,6 +1,8 @@
 import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher/reference/reader.dart';
 import 'package:grapher/view/viewable.dart';
+import 'package:grapher_user_draw/example/main.dart';
+import 'package:grapher_user_draw/figure_database_interface.dart';
 import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/user_interaction/figure_deletion_interface.dart';
 import 'package:grapher_user_draw/store.dart';
@@ -20,14 +22,12 @@ class InteractionReference extends Viewable with EndlinePropagator {
   final FigureStore _store;
   final AnchorYSelectionCondition _anchorSelectCondition;
   final ReferenceReader<PointerEventBypassChild> _refPointerBypass;
+  final FigureDatabaseInterface _figureDatabase;
 
-  InteractionReference(
-      this._store, this._anchorSelectCondition, this._refPointerBypass)
+  InteractionReference(this._store, this._anchorSelectCondition,
+      this._refPointerBypass, this._figureDatabase)
       : tapInterface = EditionInteraction(
-          _store,
-          _anchorSelectCondition,
-          _refPointerBypass,
-        );
+            _store, _anchorSelectCondition, _refPointerBypass, figureDatabase);
 
   void _updateTool(DrawToolInterface? tool) {
     _tool = tool;
@@ -37,15 +37,15 @@ class InteractionReference extends Viewable with EndlinePropagator {
 
   void _trySwitchingToCreation() {
     if (_tool == null) return;
-    tapInterface = CreationInteraction(_tool!, _store);
+    tapInterface = CreationInteraction(_tool!, _store, _figureDatabase);
     dragInterface = null;
     deleteInterface = null;
   }
 
   void _trySitchingToEdition() {
     if (_tool != null) return;
-    final edition =
-        EditionInteraction(_store, _anchorSelectCondition, _refPointerBypass);
+    final edition = EditionInteraction(
+        _store, _anchorSelectCondition, _refPointerBypass, figureDatabase);
     tapInterface = edition;
     dragInterface = edition;
     deleteInterface = edition;

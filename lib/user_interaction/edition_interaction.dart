@@ -1,4 +1,5 @@
 import 'package:grapher/reference/reader.dart';
+import 'package:grapher_user_draw/figure_database_interface.dart';
 import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/user_interaction/figure_deletion_interface.dart';
 import 'package:grapher_user_draw/store.dart';
@@ -17,11 +18,12 @@ class EditionInteraction
   final FigureStore _store;
   final AnchorYSelectionCondition _anchorSelectCondition;
   final ReferenceReader<PointerEventBypassChild> _refBypassPointer;
+  final FigureDatabaseInterface _figureDatabase;
   Anchor? _anchorSelected;
   Anchor? get anchorSelected => _anchorSelected;
 
-  EditionInteraction(
-      this._store, this._anchorSelectCondition, this._refBypassPointer);
+  EditionInteraction(this._store, this._anchorSelectCondition,
+      this._refBypassPointer, this._figureDatabase);
 
   @override
   void onTap(VirtualCoord coord) {
@@ -60,5 +62,14 @@ class EditionInteraction
     final figureSelected = _store.getByAnchor(_anchorSelected!)!;
     _store.delete(figureSelected.groupID);
     _anchorSelected = null;
+    _figureDatabase.save(figureSelected, _store.getAll());
+  }
+
+  @override
+  void onDragEnd() {
+    _refBypassPointer.read()!.disable();
+    if (anchorSelected == null) return;
+    final figureSelected = _store.getByAnchor(_anchorSelected!);
+    _figureDatabase.save(figureSelected!, _store.getAll());
   }
 }

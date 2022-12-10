@@ -3,6 +3,7 @@ import 'package:grapher/kernel/propagator/multi.dart';
 import 'package:grapher/reference/reader.dart';
 import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/viewable.dart';
+import 'package:grapher_user_draw/figure_database_interface.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/anchor_selection_condition.dart';
 import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
@@ -19,6 +20,7 @@ class UserInteraction extends Viewable with MultiPropagator {
   final ReferenceReader<PointerEventBypassChild> refPointerBypass;
   final pointerConvertion = PointerConvertionLogic();
   final selectionCondition = AnchorYSelectionCondition();
+  final FigureDatabaseInterface figureDatabase;
 
   late final PointerController pointerController;
   late final KeyboardController keyboardController;
@@ -26,15 +28,18 @@ class UserInteraction extends Viewable with MultiPropagator {
   late final InteractionReference interactionReference;
   late final GestureInterpreter gestureInterpreter;
 
-  UserInteraction({required this.store, required this.refPointerBypass}) {
+  UserInteraction(
+      {required this.store,
+      required this.refPointerBypass,
+      required this.figureDatabase}) {
     children = <GraphObject>[];
     init();
     composeChildren();
   }
 
   void init() {
-    interactionReference =
-        InteractionReference(store, selectionCondition, refPointerBypass);
+    interactionReference = InteractionReference(
+        store, selectionCondition, refPointerBypass, figureDatabase);
 
     gestureInterpreter = GestureInterpreter(
         interactionReference: interactionReference,

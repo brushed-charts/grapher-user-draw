@@ -2,12 +2,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/view/axis/virtual-axis.dart';
 import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
+import 'package:grapher_user_draw/example/main.dart';
 import 'package:grapher_user_draw/figure.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../figure_store_test.dart';
 import 'gesture_interpreter_test.dart';
 
 class MockVirtualAxis extends Mock implements VirtualAxis {}
@@ -17,10 +19,14 @@ class MockCoordTranslator extends Mock implements CoordTranslater {}
 class MockStore extends Mock implements FigureStore {}
 
 class MockFigure extends Mock implements Figure {
+  @override
   int groupID = 1234;
 }
 
 void main() {
+  late MockFigureDatabase mockDatabase;
+  late EditionInteraction edition;
+
   final mockStore = MockStore();
   final mockFigure = MockFigure();
   final mockSelectionCondition = MockAnchorSelectionCondition();
@@ -34,14 +40,16 @@ void main() {
 
   final anchorA = Anchor(x: randomPickedDate, y: randomMockValue1);
   final anchorB = Anchor(x: randomPickedDate, y: randomMockValue2);
-  final edition = EditionInteraction(
-      mockStore, mockSelectionCondition, MockReferenceReader());
-
   registerFallbackValue(Anchor(x: DateTime.now(), y: 0));
+  registerFallbackValue(Figure(MockDrawTool(1)));
   late Function() checkAnchorAForSelection;
   late Function() checkAnchorBForSelection;
 
   setUp(() {
+    mockDatabase = MockFigureDatabase();
+    edition = EditionInteraction(
+        mockStore, mockSelectionCondition, MockReferenceReader(), mockDatabase);
+
     checkAnchorAForSelection =
         () => mockSelectionCondition.isCloseToPointer(any(), anchorA.y);
     checkAnchorBForSelection =
@@ -51,6 +59,7 @@ void main() {
     when(checkAnchorAForSelection).thenReturn(false);
     when(checkAnchorBForSelection).thenReturn(false);
     when(() => mockStore.getByAnchor(any())).thenReturn(mockFigure);
+    when(() => mockStore.getAll()).thenReturn([]);
   });
 
   group("Test selectedAnchor when anchor selection condition", () {
@@ -102,5 +111,22 @@ void main() {
     edition.delete();
     verify(() => mockStore.delete(any())).called(1);
     expect(edition.anchorSelected, isNull);
+  });
+
+  group("About saving on edition, expect", () {
+    test("anchor drag cause trigger database saves", () {
+      when(checkAnchorBForSelection).thenReturn(true);
+      edition.onDragStart(pointerPosition);
+      edition.onDragEnd();
+      edition.onDragStart(dragEndPosition);
+      edition.onDragEnd();
+      verify(() => mockDatabase.save(any(), any())).called(2);
+    });
+    test("anchor deletion cause trigger database saves", () {
+      when(checkAnchorBForSelection).thenReturn(true);
+      edition.onTap(pointerPosition);
+      edition.delete();
+      verify(() => mockDatabase.save(any(), any())).called(1);
+    });
   });
 }

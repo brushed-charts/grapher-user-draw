@@ -2,10 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/figure.dart';
+import 'package:grapher_user_draw/figure_database_interface.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/creation_interaction.dart';
 import 'package:grapher_user_draw/virtual_coord.dart';
 import 'package:mocktail/mocktail.dart';
+
+class MockFigureDatabase extends Mock implements FigureDatabaseInterface {}
 
 class MockFigureStore extends Mock implements FigureStore {}
 
@@ -22,14 +25,18 @@ void main() {
   final anchorA = Anchor(x: tapPosA.x, y: tapPosA.y);
   final anchorB = Anchor(x: tapPosB.x, y: tapPosB.y);
   final mockDrawTool = MockDrawTool(2);
+  late FigureDatabaseInterface mockDatabase;
   late FigureStore mockStore;
   late CreationInteraction userInteraction;
   late Function() storeAdd;
 
   setUp(() {
     mockStore = MockFigureStore();
-    userInteraction = CreationInteraction(mockDrawTool, mockStore);
+    mockDatabase = MockFigureDatabase();
+    userInteraction =
+        CreationInteraction(mockDrawTool, mockStore, mockDatabase);
     storeAdd = () => mockStore.upsert(captureAny());
+    when(mockStore.getAll).thenReturn([]);
   });
 
   group('Assert many tap add anchor', () {
@@ -48,6 +55,11 @@ void main() {
       final figure2 = paramList[2];
       expect(figure1.groupID, isNot(equals(figure2.groupID)));
     });
+  });
+
+  test("Expect on creation,saving occurs when figure is completed", () {
+    simulateTap(userInteraction, [tapPosA, tapPosB]);
+    verify(() => mockDatabase.save(any(), any())).called(1);
   });
 }
 
