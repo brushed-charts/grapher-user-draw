@@ -105,6 +105,20 @@ void main() {
       expect(store.length, figurePopulation.length);
     });
   });
+
+  group("Expect figure store populate function", () {
+    test("to remove old content", () {
+      final startFigure = Figure(MockDrawTool(20));
+      store.upsert(startFigure);
+      expect(store.getAll().contains(startFigure), isTrue);
+      store.populate(figurePopulation);
+      expect(store.getAll().contains(startFigure), isFalse);
+    });
+    test("to fill the store with the given figures", () {
+      store.populate(figurePopulation);
+      expect(store.getAll(), equals(figurePopulation));
+    });
+  });
 }
 
 void addFiguresToStore(FigureStore store, List<Figure> figureList) {

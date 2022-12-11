@@ -41,6 +41,13 @@ class FigureStore {
     return matchingFigure;
   }
 
+  void populate(List<Figure> figuresList) {
+    _figures.clear();
+    for (final figure in figuresList) {
+      upsert(figure);
+    }
+  }
+
   void delete(int groupID) {
     _figures.remove(groupID);
   }
