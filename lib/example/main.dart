@@ -34,14 +34,8 @@ import 'fake_tool_propagator.dart';
 
 import 'json.dart';
 
-final fakeToolPropagator = FakeToolPropagator();
-final referenceRepository = ReferenceRepositoryInMemory();
-final figureStore = FigureStore();
-final figureDatabase = FigureDatabaseTester();
-var isCreatingMode = true;
-
 main(List<String> args) async {
-  runApp(const App());
+  runApp(App());
 }
 
 Stream<Map> streamer(Map json) async* {
@@ -49,7 +43,13 @@ Stream<Map> streamer(Map json) async* {
 }
 
 class App extends StatelessWidget {
-  const App({super.key});
+  final fakeToolPropagator = FakeToolPropagator();
+  final referenceRepository = ReferenceRepositoryInMemory();
+  final figureStore = FigureStore();
+  final figureDatabase = FigureDatabaseTester();
+  var isCreatingMode = true;
+
+  App({super.key});
   void onCreation() {
     if (isCreatingMode) {
       fakeToolPropagator.propagateDrawTool(null);

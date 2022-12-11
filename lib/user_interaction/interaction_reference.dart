@@ -27,7 +27,7 @@ class InteractionReference extends Viewable with EndlinePropagator {
   InteractionReference(this._store, this._anchorSelectCondition,
       this._refPointerBypass, this._figureDatabase)
       : tapInterface = EditionInteraction(
-            _store, _anchorSelectCondition, _refPointerBypass, figureDatabase);
+            _store, _anchorSelectCondition, _refPointerBypass, _figureDatabase);
 
   void _updateTool(DrawToolInterface? tool) {
     _tool = tool;
@@ -45,7 +45,7 @@ class InteractionReference extends Viewable with EndlinePropagator {
   void _trySitchingToEdition() {
     if (_tool != null) return;
     final edition = EditionInteraction(
-        _store, _anchorSelectCondition, _refPointerBypass, figureDatabase);
+        _store, _anchorSelectCondition, _refPointerBypass, _figureDatabase);
     tapInterface = edition;
     dragInterface = edition;
     deleteInterface = edition;
