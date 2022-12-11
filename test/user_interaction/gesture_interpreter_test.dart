@@ -43,6 +43,7 @@ void main() {
   TestGestureInterpreter().testInterpretationOfTap();
   TestGestureInterpreter().testThereIsNoCallWhenVCoordIsNull();
   TestGestureInterpreter().assertDragStartIsCalledBeforeDrag();
+  TestGestureInterpreter().testWheterDragEndIsTransmitted();
 }
 
 class TestGestureInterpreter {
@@ -123,6 +124,13 @@ class TestGestureInterpreter {
       final callResult = verify(dragStartFunction);
       callResult.called(2);
       expect(callResult.captured[0], isInstanceOf<VirtualCoord>());
+    });
+  }
+
+  void testWheterDragEndIsTransmitted() {
+    test("Check that dragEnd event is transmitted to interactor", () {
+      simulateDrag(10);
+      verify(() => _interactionRef.dragInterface!.onDragEnd()).called(1);
     });
   }
 

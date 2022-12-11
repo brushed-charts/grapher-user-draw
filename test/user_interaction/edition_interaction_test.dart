@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:grapher/view/axis/virtual-axis.dart';
 import 'package:grapher_user_draw/anchor.dart';
 import 'package:grapher_user_draw/coord_translater.dart';
-import 'package:grapher_user_draw/example/main.dart';
 import 'package:grapher_user_draw/figure.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/edition_interaction.dart';
