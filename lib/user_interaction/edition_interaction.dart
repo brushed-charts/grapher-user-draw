@@ -62,7 +62,7 @@ class EditionInteraction
     final figureSelected = _store.getByAnchor(_anchorSelected!)!;
     _store.delete(figureSelected.groupID);
     _anchorSelected = null;
-    _figureDatabase.save(figureSelected, _store.getAll());
+    _figureDatabase.delete(figureSelected, _store.getAll());
   }
 
   @override

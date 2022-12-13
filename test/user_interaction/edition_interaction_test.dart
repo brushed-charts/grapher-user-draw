@@ -125,7 +125,7 @@ void main() {
       when(checkAnchorBForSelection).thenReturn(true);
       edition.onTap(pointerPosition);
       edition.delete();
-      verify(() => mockDatabase.save(any(), any())).called(1);
+      verify(() => mockDatabase.delete(any(), any())).called(1);
     });
   });
 }
