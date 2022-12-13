@@ -25,16 +25,62 @@ class KeyEventPropagator extends GraphObject with SinglePropagator {
         timeStamp: Duration.zero);
     propagate(keyEvent);
   }
+
+  void emitKeyDownBackspace() {
+    const keyEvent = KeyDownEvent(
+        physicalKey: PhysicalKeyboardKey.backspace,
+        logicalKey: LogicalKeyboardKey.backspace,
+        timeStamp: Duration.zero);
+    propagate(keyEvent);
+  }
+
+  void emitKeyDownLetter() {
+    const keyEvent = KeyDownEvent(
+        physicalKey: PhysicalKeyboardKey.keyA,
+        logicalKey: LogicalKeyboardKey.keyA,
+        timeStamp: Duration.zero);
+    propagate(keyEvent);
+  }
+
+  void emitKeyDownCapsLock() {
+    const keyEvent = KeyDownEvent(
+        physicalKey: PhysicalKeyboardKey.capsLock,
+        logicalKey: LogicalKeyboardKey.capsLock,
+        timeStamp: Duration.zero);
+    propagate(keyEvent);
+  }
 }
 
 void main() {
-  test("Capture and transmit the delete event from keyboard", () {
-    final mockEdition = MockUserInteraction();
-    final interactionRefence = MockInteractionReference();
+  late MockUserInteraction mockEdition;
+  late MockInteractionReference interactionRefence;
+  late KeyEventPropagator propagator;
+
+  setUp(() {
+    mockEdition = MockUserInteraction();
+    interactionRefence = MockInteractionReference();
     when(() => interactionRefence.deleteInterface).thenReturn(mockEdition);
-    final propagator = KeyEventPropagator(
+    propagator = KeyEventPropagator(
         child: KeyboardController(interactionReference: interactionRefence));
-    propagator.emitKeyDownDelete();
-    verify(() => mockEdition.delete()).called(1);
+  });
+
+  group("Check deletion from keyboard", () {
+    test("Expect on delete key the deletion event will be propagated", () {
+      propagator.emitKeyDownDelete();
+      verify(() => mockEdition.delete()).called(1);
+    });
+
+    test("Expect on backspace key the deletion event will be propagated", () {
+      propagator.emitKeyDownBackspace();
+      verify(() => mockEdition.delete()).called(1);
+    });
+  });
+
+  test(
+      "Check that other keys except delete and backspace "
+      "don't propgagate the deletion event", () {
+    propagator.emitKeyDownCapsLock();
+    propagator.emitKeyDownLetter();
+    verifyNever(() => mockEdition.delete());
   });
 }

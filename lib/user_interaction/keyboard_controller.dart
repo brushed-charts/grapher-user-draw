@@ -10,9 +10,16 @@ class KeyboardController extends GraphObject with EndlinePropagator {
   }
 
   void onKeyDown(KeyDownEvent key) {
+    if (!isADeletionKey(key)) return;
     final objectDeletion = interactionReference.deleteInterface;
     if (objectDeletion == null) return;
     objectDeletion.delete();
     setState(this);
+  }
+
+  bool isADeletionKey(KeyDownEvent key) {
+    if (key.logicalKey == LogicalKeyboardKey.backspace) return true;
+    if (key.logicalKey == LogicalKeyboardKey.delete) return true;
+    return false;
   }
 }
