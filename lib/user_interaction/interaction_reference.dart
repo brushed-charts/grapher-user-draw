@@ -1,7 +1,6 @@
 import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher/reference/reader.dart';
 import 'package:grapher/view/viewable.dart';
-import 'package:grapher_user_draw/example/main.dart';
 import 'package:grapher_user_draw/figure_database_interface.dart';
 import 'package:grapher_user_draw/user_interaction/bypass_pointer_event.dart';
 import 'package:grapher_user_draw/user_interaction/figure_deletion_interface.dart';
