@@ -1,6 +1,6 @@
 name: grapher_user_draw
-description: A new Flutter package project.
-version: 0.0.1
+description: Library that allow user to draw, edit and save figures.
+version: 1.0.0
 publish_to: none
 
 environment:
