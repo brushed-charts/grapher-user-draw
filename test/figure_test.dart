@@ -31,6 +31,11 @@ void main() {
     expect(() => Figure(MockDrawTool(1)), returnsNormally);
   });
 
+  test("Given a groupID in input check if figure take this ID", () {
+    final figureToTest = Figure(MockDrawTool(2), 12345);
+    expect(figureToTest.groupID, equals(12345));
+  });
+
   group('Test adding anchor intto the figure', () {
     test('if anchor count don\'t reach the limit', () {
       addAnchorsToFigure(fiveAnchorsCount, figureLength5);

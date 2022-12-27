@@ -4,7 +4,7 @@ import 'anchor.dart';
 import 'misc.dart';
 
 class Figure {
-  final groupID = Misc.generateUniqueID();
+  final int groupID;
   final _anchors = <Anchor>[];
   final DrawToolInterface tool;
   int get maxLength => tool.maxLength;
@@ -12,7 +12,8 @@ class Figure {
   String get type => tool.name;
   bool contains(Anchor anchor) => _anchors.contains(anchor);
 
-  Figure(this.tool) {
+  Figure(this.tool, [int? groupID])
+      : groupID = groupID ?? Misc.generateUniqueID() {
     if (maxLength <= 0) {
       throw ArgumentError("Figure can't have a max length less that 1");
     }
