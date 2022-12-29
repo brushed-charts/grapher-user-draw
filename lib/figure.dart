@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 
 import 'anchor.dart';
@@ -41,5 +42,23 @@ class Figure {
     final targetIndex = _anchors.indexOf(anchorToReplace);
     if (targetIndex == -1) return;
     _anchors[targetIndex] = newAnchor;
+  }
+
+  @override
+  bool operator ==(covariant Figure other) {
+    if (!listEquals(other._anchors, _anchors)) return false;
+    if (other.groupID != groupID) return false;
+    if (other.type != type) return false;
+    if (other.length != length) return false;
+    if (other.maxLength != maxLength) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hash(groupID, tool, _anchors);
+
+  @override
+  String toString() {
+    return "{groupID: $groupID, maxLength: $maxLength, length: $length, toolName: $type, anchors: $_anchors}";
   }
 }

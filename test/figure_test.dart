@@ -8,6 +8,8 @@ class MockAnchor extends Mock implements Anchor {}
 
 class MockDrawTool extends Mock implements DrawToolInterface {
   @override
+  final String name = "test tool";
+  @override
   final int maxLength;
   MockDrawTool(this.maxLength);
 }
@@ -121,6 +123,47 @@ void main() {
       expect(figureLength2.contains(anchorA), isFalse);
       expect(figureLength2.contains(anchorB), isFalse);
       expect(figureLength2.contains(anchorC), isTrue);
+    });
+  });
+
+  group("Figure equality test:", () {
+    test("assert figure that should be equal is really equal", () {
+      const groupID = 1234;
+      final figureA = Figure(MockDrawTool(2), groupID),
+          figureB = Figure(MockDrawTool(2), groupID);
+      figureA.add(anchorA);
+      figureA.add(anchorB);
+      figureB.add(anchorA);
+      figureB.add(anchorB);
+      expect(figureA, equals(figureB));
+    });
+    test("assert figure with different anchors are not equal", () {
+      const groupID = 1234;
+      final figureA = Figure(MockDrawTool(2), groupID),
+          figureB = Figure(MockDrawTool(2), groupID);
+      figureA.add(anchorA);
+      figureA.add(anchorB);
+      figureB.add(anchorA);
+      figureB.add(anchorC);
+      expect(figureA, isNot(equals(figureB)));
+    });
+    test("assert figure with different groupID is not equal", () {
+      final figureA = Figure(MockDrawTool(2)),
+          figureB = Figure(MockDrawTool(2));
+      figureA.add(anchorA);
+      figureA.add(anchorB);
+      figureB.add(anchorA);
+      figureB.add(anchorB);
+      expect(figureA, isNot(equals(figureB)));
+    });
+    test("assert figure with different draw tool are not equal", () {
+      final figureA = Figure(MockDrawTool(3)),
+          figureB = Figure(MockDrawTool(2));
+      figureA.add(anchorA);
+      figureA.add(anchorB);
+      figureB.add(anchorA);
+      figureB.add(anchorB);
+      expect(figureA, isNot(equals(figureB)));
     });
   });
 }

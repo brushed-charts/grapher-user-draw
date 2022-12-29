@@ -9,8 +9,9 @@ void main() {
   final anchorA = Anchor(x: expectedDatetime1, y: expectedY1);
 
   test('Assert two anchors with the same values are equals', () {
-    final anchorX = Anchor(x: expectedDatetime1, y: expectedY1);
+    final anchorX = Anchor(x: DateTime(2022, 11, 19, 00, 50), y: 8765);
     expect(anchorA, equals(anchorX));
+    expect(anchorA.hashCode, equals(anchorX.hashCode));
   });
   test('Assert two anchors with different X & Y are not equal', () {
     final anchorX = Anchor(x: expectedDatetime2, y: expectedY2);
