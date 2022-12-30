@@ -23,12 +23,12 @@ class FigureDatabaseTester implements FigureDatabaseInterface {
   }
 
   @override
-  void save(Figure newFigure, List<Figure> allFigures) {
-    figures = allFigures;
+  void save(Figure newFigure) {
+    // figures = allFigures;
   }
 
   @override
-  void delete(Figure figureToDelete, List<Figure> allFigures) {
-    figures = allFigures;
+  void delete(Figure figureToDelete) {
+    // figures = allFigures;
   }
 }

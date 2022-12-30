@@ -33,6 +33,6 @@ class CreationInteraction implements TapInteractionInterface {
   void saveOnCompleteFigure() {
     if (_currentFigure == null) return;
     if (!_currentFigure!.isFull()) return;
-    _database.save(_currentFigure!, _store.getAll());
+    _database.save(_currentFigure!);
   }
 }

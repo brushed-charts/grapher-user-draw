@@ -14,6 +14,8 @@ class MockFigureStore extends Mock implements FigureStore {}
 
 class MockDrawTool extends Mock implements DrawToolInterface {
   @override
+  final String name = "test tool";
+  @override
   final int maxLength;
   MockDrawTool(this.maxLength);
 }
@@ -59,7 +61,7 @@ void main() {
 
   test("Expect on creation,saving occurs when figure is completed", () {
     simulateTap(userInteraction, [tapPosA, tapPosB]);
-    verify(() => mockDatabase.save(any(), any())).called(1);
+    verify(() => mockDatabase.save(any())).called(1);
   });
 }
 

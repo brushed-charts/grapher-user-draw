@@ -1,12 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:grapher/kernel/drawEvent.dart';
-import 'package:grapher/kernel/drawZone.dart';
-import 'package:grapher/view/axis/unit-axis.dart';
-import 'package:grapher/view/axis/virtual-axis.dart';
 import 'package:grapher/view/view-event.dart';
-import 'package:grapher_user_draw/draw_tools/draw_tool_interface.dart';
 import 'package:grapher_user_draw/entrypoint_viewable.dart';
 import 'package:grapher_user_draw/figure.dart';
 import 'package:grapher_user_draw/figure_database_interface.dart';
@@ -14,8 +7,6 @@ import 'package:grapher_user_draw/presenter.dart';
 import 'package:grapher_user_draw/store.dart';
 import 'package:grapher_user_draw/user_interaction/main_userinteraction.dart';
 import 'package:mocktail/mocktail.dart';
-
-import 'presenter_test.dart';
 
 class MockFigureStore extends Mock implements FigureStore {}
 

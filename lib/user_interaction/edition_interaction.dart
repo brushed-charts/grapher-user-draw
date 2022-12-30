@@ -62,7 +62,7 @@ class EditionInteraction
     final figureSelected = _store.getByAnchor(_anchorSelected!)!;
     _store.delete(figureSelected.groupID);
     _anchorSelected = null;
-    _figureDatabase.delete(figureSelected, _store.getAll());
+    _figureDatabase.delete(figureSelected);
   }
 
   @override
@@ -70,6 +70,6 @@ class EditionInteraction
     _refBypassPointer.read()!.disable();
     if (anchorSelected == null) return;
     final figureSelected = _store.getByAnchor(_anchorSelected!);
-    _figureDatabase.save(figureSelected!, _store.getAll());
+    _figureDatabase.save(figureSelected!);
   }
 }

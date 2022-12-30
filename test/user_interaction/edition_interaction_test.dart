@@ -113,19 +113,19 @@ void main() {
   });
 
   group("About saving on edition, expect", () {
-    test("anchor drag cause trigger database saves", () {
+    test("anchor drag trigger database saves", () {
       when(checkAnchorBForSelection).thenReturn(true);
       edition.onDragStart(pointerPosition);
       edition.onDragEnd();
       edition.onDragStart(dragEndPosition);
       edition.onDragEnd();
-      verify(() => mockDatabase.save(any(), any())).called(2);
+      verify(() => mockDatabase.save(any())).called(2);
     });
-    test("anchor deletion cause trigger database saves", () {
+    test("anchor deletion trigger database deletion function", () {
       when(checkAnchorBForSelection).thenReturn(true);
       edition.onTap(pointerPosition);
       edition.delete();
-      verify(() => mockDatabase.delete(any(), any())).called(1);
+      verify(() => mockDatabase.delete(any())).called(1);
     });
   });
 }

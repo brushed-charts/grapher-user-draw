@@ -32,6 +32,8 @@ class MockStore extends Mock implements FigureStore {}
 
 class MockDrawTool extends Mock implements DrawToolInterface {
   @override
+  final String name = "test tool";
+  @override
   final int maxLength;
   MockDrawTool(this.maxLength);
 }
