@@ -26,8 +26,8 @@ class GrapherUserDraw extends Viewable with MultiPropagator {
     children.add(drawPresenter);
   }
 
-  void _populateFromDatabase() {
-    final loadedFigures = figureDatabase.load();
+  void _populateFromDatabase() async {
+    final loadedFigures = await figureDatabase.load();
     store.populate(loadedFigures);
   }
 

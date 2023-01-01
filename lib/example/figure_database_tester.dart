@@ -18,7 +18,7 @@ class FigureDatabaseTester implements FigureDatabaseInterface {
   }
 
   @override
-  List<Figure> load() {
+  Future<List<Figure>> load() async {
     return figures;
   }
 

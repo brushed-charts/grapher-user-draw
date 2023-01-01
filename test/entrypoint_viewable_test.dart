@@ -26,7 +26,7 @@ void main() {
   final mockInteraction = MockUserInteraction();
   final mockDrawPresenter = MockDrawPresenter();
   final mockFigure = MockFigure();
-  when(mockDatabase.load).thenReturn([mockFigure]);
+  when(mockDatabase.load).thenAnswer((invocation) async => [mockFigure]);
 
   GrapherUserDraw(
       drawPresenter: mockDrawPresenter,
